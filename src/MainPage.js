@@ -13,7 +13,7 @@ function MainPage() {
     <div>
       <h1>UNDER CONSTRUCTION</h1>
       <p onClick={handleLinkedInClick} style={{ cursor: 'pointer' }}>
-        <img src="/images/LinkedIn_icon.png" alt="LinkedIn Icon" style={{ marginRight: '5px', width: '20px', height: '20px' }} />
+				<img src={`${process.env.PUBLIC_URL}/images/LinkedIn_icon.png`} alt="LinkedIn Icon" style={{ marginRight: '5px', width: '20px', height: '20px' }}/>
         <span className="underline-on-hover">Ivan Amorós Prados</span>
       </p>
     </div>
