@@ -1,32 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainPage from './MainPage';
-import CookieConsentComponent from './CookieConsentComponent'; // Make sure the import path is correct
+// import LoginPage from './LoginPage';
+import CookieConsentComponent from './components/CookieConsentComponent';
+import { AuthProvider } from './AuthContext';
+
 
 function App() {
-  const [analyticsInitialized, setAnalyticsInitialized] = useState(false);
-
-  const initializeAnalytics = () => {
-    if (!analyticsInitialized) {
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        'gtm.start': new Date().getTime(),
-        event: 'gtm.js'
-      });
-      window.gtag = function() { window.dataLayer.push(arguments); };
-      window.gtag('js', new Date());
-      window.gtag('config', 'G-NF487Q1T0Z');
-      setAnalyticsInitialized(true);
-    }
-  };
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <MainPage />
-        <CookieConsentComponent onAccept={initializeAnalytics} />
-      </header>
-    </div>
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <header className="App-header">
+            {/* Header content if any */}
+          </header>
+          <main>
+            <Routes>
+              <Route path="/" element={
+                <>
+                  <MainPage />
+                  <CookieConsentComponent />
+                </>
+              } />
+              {/* <Route path="/login" element={<LoginPage />} /> */}
+            </Routes>
+          </main>
+          {/* Footer or other components */}
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 
