@@ -2,9 +2,10 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainPage from './MainPage';
-// import LoginPage from './LoginPage';
+import LoginPage from './components/LoginPage';
 import CookieConsentComponent from './components/CookieConsentComponent';
 import { AuthProvider } from './AuthContext';
+import Navbar from './components/Navbar';
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <div className="App">
           <header className="App-header">
             {/* Header content if any */}
+            <Navbar />
           </header>
           <main>
             <Routes>
@@ -23,7 +25,7 @@ function App() {
                   <CookieConsentComponent />
                 </>
               } />
-              {/* <Route path="/login" element={<LoginPage />} /> */}
+              <Route path="/login" element={<LoginPage />} />
             </Routes>
           </main>
           {/* Footer or other components */}

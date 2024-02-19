@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../AuthContext';
+import './LoginPage.css'
 
 function LoginPage() {
   const [username, setUsername] = useState('');
@@ -10,7 +11,6 @@ function LoginPage() {
   const { isLoggedIn, login } = useAuth();
 
   useEffect(() => {
-    // Redirect to home if already logged in
     if (isLoggedIn) {
       navigate('/');
     }
@@ -27,29 +27,29 @@ function LoginPage() {
   };
 
   return (
-    <div>
-      <h2>Login Page</h2>
-      {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
+    <div className="LoginPage">
+      <img src="/images/this-is-my-house.gif" alt="Log In" />
+      {loginError && <p>{loginError}</p>}
       <form onSubmit={handleLogin}>
         <div>
-          <label htmlFor="username">Username:</label>
           <input
             type="text"
             id="username"
+            placeholder='Username'
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div>
-          <label htmlFor="password">Password:</label>
           <input
             type="password"
             id="password"
+            placeholder='Password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit">Log In</button>
       </form>
     </div>
   );
