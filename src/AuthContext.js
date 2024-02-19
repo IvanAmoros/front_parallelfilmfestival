@@ -13,8 +13,8 @@ export const AuthProvider = ({ children }) => {
       const accessToken = localStorage.getItem('accessToken');
       if (accessToken) {
         try {
-          const apiUrl = process.env.REACT_APP_API_BASE_URL;
-          const response = await fetch(`${apiUrl}base/api/validate_token/`, {
+          const apiUrl = process.env.REACT_APP_API_URL;
+          const response = await fetch(`${apiUrl}/base/api/validate_token/`, {
             headers: {
               'Authorization': `Bearer ${accessToken}`,
             },
@@ -39,8 +39,9 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      const apiUrl = process.env.REACT_APP_API_BASE_URL;
-      const response = await fetch(`${apiUrl}base/api/token/`, {
+      const apiUrl = process.env.REACT_APP_API_URL;
+      console.log("API URL: " + apiUrl);
+      const response = await fetch(`${apiUrl}/base/api/token/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
