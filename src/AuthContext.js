@@ -23,10 +23,10 @@ export const AuthProvider = ({ children }) => {
           if (response.ok) {
             const data = await response.json();
             setIsLoggedIn(true);
-            setUser({ username: data.username }); // Adjust based on actual user details you expect
+            setUser({ username: data.username });
           } else {
             console.log('Token validation failed');
-            localStorage.removeItem('accessToken'); // Clear the invalid token
+            localStorage.removeItem('accessToken');
           }
         } catch (error) {
           console.error('Error validating token:', error);
@@ -40,7 +40,6 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password) => {
     try {
       const apiUrl = process.env.REACT_APP_API_URL;
-      console.log("API URL: " + apiUrl);
       const response = await fetch(`${apiUrl}/base/api/token/`, {
         method: 'POST',
         headers: {

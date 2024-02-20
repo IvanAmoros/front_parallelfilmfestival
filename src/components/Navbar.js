@@ -1,13 +1,12 @@
 // Navbar.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../AuthContext'; // Import useAuth hook
+import { useAuth } from '../AuthContext';
 
 function Navbar() {
-  const { isLoggedIn, logout, user } = useAuth(); // Assuming 'user' holds the authenticated user's info
-  const [showDropdown, setShowDropdown] = useState(false); // Dropdown state
+  const { isLoggedIn, logout, user } = useAuth();
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  // Toggle dropdown menu
   const toggleDropdown = () => setShowDropdown(!showDropdown);
 
   return (
@@ -19,7 +18,7 @@ function Navbar() {
         {isLoggedIn ? (
           <li style={{ position: 'relative' }}>
             <button onClick={toggleDropdown}>
-              {user.username} {/* Safely display the username or a default string */}
+              {user.username}
             </button>
             {showDropdown && (
               <div style={{ position: 'absolute', top: '100%', right: 0, backgroundColor: 'white', border: '1px solid #ddd', borderRadius: '4px', padding: '10px' }}>

@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../AuthContext';
+import './LoginPage.css';
 
 function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // New state for toggling password visibility
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
   const { isLoggedIn, login } = useAuth();
 
   useEffect(() => {
-    // Redirect to home if already logged in
     if (isLoggedIn) {
       navigate('/');
     }
@@ -26,30 +27,38 @@ function LoginPage() {
     }
   };
 
+  // Toggle the visibility of the password
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <div>
-      <h2>Login Page</h2>
-      {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
+    <div className="LoginPage">
+      <img src="/images/this-is-my-house.gif" alt="Log In" />
+      {loginError && <p>{loginError}</p>}
       <form onSubmit={handleLogin}>
         <div>
-          <label htmlFor="username">Username:</label>
           <input
             type="text"
             id="username"
+            placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
-        <div>
-          <label htmlFor="password">Password:</label>
+        <div className="passwordContainer">
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             id="password"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <button type="button" onClick={togglePasswordVisibility} className="togglePassword">
+            {showPassword ? 'Hide' : 'Show'}
+          </button>
         </div>
-        <button type="submit">Login</button>
+        <button type="submit">Log In</button>
       </form>
     </div>
   );
