@@ -52,3 +52,25 @@
   .LoginPage p {
 	color: #ff0000;
   }
+
+  .passwordContainer {
+	position: relative;
+	display: flex;
+	align-items: center;
+  }
+  
+  .LoginPage input[type="password"],
+  .LoginPage input[type="text"] {
+	flex-grow: 1;
+  }
+  
+  .togglePassword {
+	position: absolute;
+	bottom: 21px;
+	right: 1px;
+	background: none;
+	border: none;
+	color: #007bff;
+	cursor: pointer;
+  }
+  

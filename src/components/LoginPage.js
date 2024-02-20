@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
-import './LoginPage.css'
+import './LoginPage.css';
 
 function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // New state for toggling password visibility
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
   const { isLoggedIn, login } = useAuth();
@@ -26,6 +27,11 @@ function LoginPage() {
     }
   };
 
+  // Toggle the visibility of the password
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div className="LoginPage">
       <img src="/images/this-is-my-house.gif" alt="Log In" />
@@ -35,19 +41,22 @@ function LoginPage() {
           <input
             type="text"
             id="username"
-            placeholder='Username'
+            placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
-        <div>
+        <div className="passwordContainer">
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             id="password"
-            placeholder='Password'
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <button type="button" onClick={togglePasswordVisibility} className="togglePassword">
+            {showPassword ? 'Hide' : 'Show'}
+          </button>
         </div>
         <button type="submit">Log In</button>
       </form>
