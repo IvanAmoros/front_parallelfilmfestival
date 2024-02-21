@@ -14,7 +14,6 @@ function App() {
       <Router>
         <div className="App">
           <header className="App-header">
-            {/* Header content if any */}
             <Navbar />
           </header>
           <main>

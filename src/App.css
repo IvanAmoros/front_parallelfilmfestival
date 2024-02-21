@@ -19,13 +19,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(8px + 2vmin);
   color: white;
 }
 
-/* Adjust the .App-header or add .App-main for main content styling if needed */
 .App-main {
-  /* Styling for the main content area */
   background-color: #282c34;
   padding: 20px;
 }
@@ -47,33 +45,39 @@
   text-decoration: underline;
 }
 
-/* Additional styles for LoginPage or other components as necessary */
-.LoginPage {
-  /* Specific styles for your login page if needed */
-}
-
-/* Ensure main content is properly aligned and styled */
 main {
   color: white;
   background-color: #282c34;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 100vh; /* Adjust based on header size to fill the screen */
+  min-height: 100vh;
+}
+
+nav {
+  padding-top: 20px;
 }
 
 nav ul {
+  display: flex;
   list-style-type: none;
   padding: 0;
+  margin: 0;
 }
 
 nav ul li {
-  display: inline;
-  margin-right: 10px;
+  margin-right: 50px;
 }
 
-nav ul li a {
+nav ul li:last-child {
+  margin-right: 0;
+}
+
+nav a {
   text-decoration: none;
-  color: #000;
+  color: inherit;
+}
+
+nav a:hover {
+  text-decoration: underline;
 }
