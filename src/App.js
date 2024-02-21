@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainPage from './MainPage';
+import SkillsDisplay from './components/api/SkillsDisplay';
 import LoginPage from './components/LoginPage';
 import CookieConsentComponent from './components/CookieConsentComponent';
 import { AuthProvider } from './AuthContext';
@@ -21,6 +22,7 @@ function App() {
               <Route path="/" element={
                 <>
                   <MainPage />
+                  <SkillsDisplay />
                   <CookieConsentComponent />
                 </>
               } />
