@@ -3,6 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainPage from './MainPage';
 import SkillsDisplay from './components/api/SkillsDisplay';
+import WorksDisplay from './components/api/WorksDisplay';
 import LoginPage from './components/LoginPage';
 import CookieConsentComponent from './components/CookieConsentComponent';
 import { AuthProvider } from './AuthContext';
@@ -23,6 +24,7 @@ function App() {
                 <>
                   <MainPage />
                   <SkillsDisplay />
+                  <WorksDisplay />
                   <CookieConsentComponent />
                 </>
               } />

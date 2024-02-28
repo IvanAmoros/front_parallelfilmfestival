@@ -1,0 +1,72 @@
+/* WorksDisplay.css */
+.works-display {
+	margin: 20px auto;
+	max-width: 800px;
+	background-color: #f0f0f0;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	padding: 20px;
+	color: #333;
+  }
+  
+  .works-display h2 {
+	color: #282c34;
+	font-size: 24px;
+  }
+  
+  .work-item {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 15px;
+	margin-bottom: 15px;
+  }
+  
+  .work-item:last-child {
+	border-bottom: none;
+  }
+  
+  .work-item h3 {
+	margin: 0;
+	color: #61dafb;
+  }
+  
+  .work-item .dates {
+	color: #666;
+	font-size: 14px;
+  }
+  
+  .work-item .description, .work-item ul {
+	text-align: left;
+	margin-top: 10px;
+  }
+  
+  .work-item ul {
+	list-style-type: disc;
+	padding-left: 20px;
+  }
+  
+  .work-item li {
+	margin-bottom: 5px;
+  }
+  
+  .task-title {
+	font-weight: bold;
+  }
+  
+  .work-item .skills {
+	margin-top: 10px;
+  }
+  
+  .skill-tag {
+	display: inline-block;
+	background-color: #61dafb;
+	color: #fff;
+	border-radius: 4px;
+	padding: 2px 8px;
+	margin-right: 5px;
+	font-size: 12px;
+  }
+  
+  .skill-tag:last-child {
+	margin-right: 0;
+  }
+  

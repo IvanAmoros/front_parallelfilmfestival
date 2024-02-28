@@ -1,7 +1,7 @@
 // SkillsDisplay.js
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './SkillsDisplay.css'; 
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./SkillsDisplay.css";
 
 const SkillsDisplay = () => {
   const [categories, setCategories] = useState([]);
@@ -23,22 +23,24 @@ const SkillsDisplay = () => {
     };
 
     fetchSkills();
-  }, [apiUrl]); // This effect doesn't depend on dynamic values
+  }, [apiUrl]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
-      <h2>Skills</h2>
+    <div className="skills-display">
+      <h2>My Skills</h2>
       {categories.map((category) => (
-        <div key={category.id}>
+        <div key={category.id} className="category-item">
           <h3>{category.name}</h3>
-          <ul>
+          <ul className="skills-list">
             {category.skills.map((skill) => (
-              <li key={skill.id}>
-                <h5>{skill.name}</h5>
-                <h5>{skill.rating}</h5>
+              <li key={skill.id} className="skill-item">
+                <div className="skill-content">
+                  <span className="skill-name">{skill.name}</span>
+                  <span className="skill-rating">{skill.rating}</span>
+                </div>
               </li>
             ))}
           </ul>

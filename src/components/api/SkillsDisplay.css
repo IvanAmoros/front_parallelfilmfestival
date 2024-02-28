@@ -1,10 +1,67 @@
-ul {
-	display: flex;
-	list-style-type: none;
+/* SkillsDisplay.css */
+.skills-display {
+	margin: 20px auto;
+	max-width: 800px;
+	background-color: #f0f0f0;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	padding: 20px;
+	color: #333;
+  }
+  
+  .skills-display h2 {
+	color: #282c34;
+	font-size: 24px;
+	margin-bottom: 20px;
+  }
+  
+  .category-item {
+	margin-bottom: 20px;
+  }
+  
+  .category-item h3 {
+	color: #61dafb; /* Using the App-link color for consistency */
+	font-size: 20px;
+	margin-bottom: 10px;
+  }
+  
+  .skills-list {
+	list-style: none;
 	padding: 0;
-	margin: 0;
-}
+	display: flex;
+	/* flex-wrap: wrap; */
+	gap: 10px; /* Add space between the skill items */
+	min-width: 200px; /* Increase minimum width */
+	flex: 1 1 150px; /* Original setting */
+  }
+  
+  .skill-item {
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	padding: 10px 15px;
+	margin-bottom: 10px;
+	flex: 1 1 150px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+  }
 
-ul li {
-	margin-right: 50px;
-}
+  .skill-content {
+	display: flex;
+	flex-direction: column; /* Stack flex items vertically */
+	justify-content: center; /* Align items in the center vertically */
+	align-items: center; /* Align items in the center horizontally */
+	width: 100%;
+  }
+  
+  .skill-name, .skill-rating {
+	margin: 0;
+	font-size: 16px;
+  }
+  
+  .skill-rating {
+	font-weight: normal;
+	color: #666;
+  }
+  
