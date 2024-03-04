@@ -1,12 +1,14 @@
-// SkillsDisplay.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./SkillsDisplay.css";
+import { useAuth } from '../../AuthContext';
+import { Link } from 'react-router-dom';
 
 const SkillsDisplay = () => {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { user } = useAuth(); // Use useAuth to access the current user state
 
   const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -30,7 +32,7 @@ const SkillsDisplay = () => {
 
   return (
     <div className="skills-display">
-      <h2>My Skills</h2>
+      <h2>My Skills {user?.is_superuser && <Link to="/edit-skills">Edit</Link>}</h2>
       {categories.map((category) => (
         <div key={category.id} className="category-item">
           <h3>{category.name}</h3>
