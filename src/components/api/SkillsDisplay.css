@@ -1,10 +1,109 @@
-ul {
-	display: flex;
-	list-style-type: none;
-	padding: 0;
-	margin: 0;
+/* SkillsDisplay.css */
+.skills-display {
+	margin: 20px auto;
+	max-width: 1000px;
+	background-color: #f0f0f0;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	padding: 20px;
+	color: #333;
 }
 
-ul li {
-	margin-right: 50px;
+.skills-display h2 {
+	color: #282c34;
+	font-size: 24px;
+	margin-bottom: 20px;
+}
+
+.category-item {
+	margin-bottom: 20 px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	/* Center align the category */
+}
+
+.category-item h3 {
+	color: #61dafb;
+	font-size: 20px;
+	margin-bottom: 10px;
+}
+
+.skills-list {
+	list-style: none;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	justify-content: center;
+	/* Centers items horizontally */
+	width: 100%;
+	/* Ensure list takes full width to properly center items */
+}
+
+.skill-item {
+	display: flex;
+	flex-direction: column;
+	/* Stack children vertically */
+	align-items: center;
+	/* Center align the skill content */
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	padding: 10px 15px;
+	margin-bottom: 10px;
+}
+
+.skill-content {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	/* Center content horizontally */
+	width: 120px;
+	/* Fixed width to match progress bar container */
+}
+
+.skill-rating {
+	font-weight: normal;
+	color: #666;
+	display: none;
+	/* Hide the numerical rating */
+}
+
+.skill-progress-container {
+	width: 100px;
+	/* Fixed width */
+	background-color: #ddd;
+	border-radius: 4px;
+	height: 10px;
+	overflow: hidden;
+}
+
+.skill-progress {
+	height: 100%;
+	background-color: #61dafb;
+	border-radius: 4px;
+	animation: fillBar 2s ease-out;
+	height: 100%;
+	background-color: #61dafb;
+	border-radius: 4px;
+}
+
+@keyframes fillBar {
+	from {
+		width: 0;
+	}
+
+	to {
+		width: var(--progress-width);
+		/* Use the custom property */
+	}
+}
+
+.json-display {
+	text-align: left;
+	width: 100%;
+	white-space: pre-wrap;
+	word-break: break-word;
 }

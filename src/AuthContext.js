@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
@@ -6,7 +7,8 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null); // State to hold user details
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -14,22 +16,16 @@ export const AuthProvider = ({ children }) => {
       if (accessToken) {
         try {
           const apiUrl = process.env.REACT_APP_API_URL;
-          const response = await fetch(`${apiUrl}/base/api/validate_token/`, {
+          const response = await axios.get(`${apiUrl}/base/api/validate_token/`, {
             headers: {
               'Authorization': `Bearer ${accessToken}`,
             },
           });
-
-          if (response.ok) {
-            const data = await response.json();
-            setIsLoggedIn(true);
-            setUser({ username: data.username });
-          } else {
-            console.log('Token validation failed');
-            localStorage.removeItem('accessToken');
-          }
+          setIsLoggedIn(true);
+          setUser({ username: response.data.username, is_superuser: response.data.is_superuser });
         } catch (error) {
           console.error('Error validating token:', error);
+          localStorage.removeItem('accessToken');
         }
       }
     };
@@ -38,29 +34,29 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (username, password) => {
+    if (!username && !password) {
+      setError('Please enter a username and password.');
+      return;
+    } else if (!username) {
+      setError('Please enter a username.');
+      return;
+    } else if (!password) {
+      setError('Please enter a password.');
+      return;
+    }
     try {
       const apiUrl = process.env.REACT_APP_API_URL;
-      const response = await fetch(`${apiUrl}/base/api/token/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
+      const response = await axios.post(`${apiUrl}/base/api/token/`, {
+        username,
+        password,
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('accessToken', data.access);
-        localStorage.setItem('refreshToken', data.refresh);
-        setIsLoggedIn(true);
-        setUser({ username: data.username });
-      } else {
-        console.error('Login failed.');
-        // Handle login failure, e.g., by setting an error state here
-      }
+      localStorage.setItem('accessToken', response.data.access);
+      localStorage.setItem('refreshToken', response.data.refresh);
+      setIsLoggedIn(true);
+      setUser({ username: response.data.username, is_superuser: response.data.is_superuser });
     } catch (error) {
-      console.error('Login error:', error);
-      // Handle error, e.g., by setting an error state here
+      setError('Failed to login. Please check your username and password.');
+      console.error('Login error:', error.response ? error.response.data : error.message);
     }
   };
 
@@ -71,10 +67,8 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  // Provide the isLoggedIn, user, login, and logout in the context value
-  // This makes them available to any component in your app that uses the useAuth hook
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, error }}>
       {children}
     </AuthContext.Provider>
   );

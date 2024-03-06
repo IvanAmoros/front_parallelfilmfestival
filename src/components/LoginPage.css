@@ -3,68 +3,68 @@
 	max-width: 400px;
 	margin: auto;
 	padding: 20px;
-	background-color: #f7f7f7;
+	background-color: rgba(22, 22, 23, .8);
 	border-radius: 8px;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	color: #333;
-  }
+}
 
-  .LoginPage img {
+.LoginPage img {
 	width: 250px;
 	margin-bottom: 50px;
-  }
-  
-  .LoginPage h2 {
+}
+
+.LoginPage h2 {
 	margin-bottom: 20px;
-  }
-  
-  .LoginPage form {
+}
+
+.LoginPage form {
 	display: flex;
 	flex-direction: column;
-  }
-  
-  .LoginPage label {
+}
+
+.LoginPage label {
 	margin-bottom: 5px;
-  }
-  
-  .LoginPage input {
+}
+
+.LoginPage input {
 	width: 240px;
 	padding: 10px;
 	margin-bottom: 20px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
-  }
-  
-  .LoginPage button {
+}
+
+.LoginPage button {
 	padding: 10px;
-	background-color: #007bff;
+	background-color: rgba(52, 152, 219, 1);
 	color: white;
 	border: none;
 	border-radius: 4px;
 	cursor: pointer;
 	transition: background-color 0.2s ease-in-out;
-  }
-  
-  .LoginPage button:hover {
-	background-color: #0056b3;
-  }
-  
-  .LoginPage p {
-	color: #ff0000;
-  }
+}
 
-  .passwordContainer {
+.LoginPage button:hover {
+	background-color: #0056b3;
+}
+
+.LoginPage p {
+	color: #ff0000;
+}
+
+.passwordContainer {
 	position: relative;
 	display: flex;
 	align-items: center;
-  }
-  
-  .LoginPage input[type="password"],
-  .LoginPage input[type="text"] {
+}
+
+.LoginPage input[type="password"],
+.LoginPage input[type="text"] {
 	flex-grow: 1;
-  }
-  
-  .togglePassword {
+}
+
+.togglePassword {
 	position: absolute;
 	bottom: 21px;
 	right: 1px;
@@ -72,5 +72,30 @@
 	border: none;
 	color: #007bff;
 	cursor: pointer;
-  }
-  
+}
+
+/* Updated .error-message with fade-in effect */
+.error-message {
+	width: 240px;
+	color: #ff3860;
+	background-color: #fff0f0;
+	border: 1px solid #ff3860;
+	border-radius: 4px;
+	padding: 10px;
+	margin-bottom: 20px;
+	text-align: center;
+	opacity: 0;
+	/* Start fully transparent */
+	visibility: hidden;
+	/* Start as not visible */
+	transition: opacity 0.5s ease-in-out, visibility 0.5s;
+	/* Smooth transition for opacity and visibility */
+}
+
+/* Class to be added when there is an error message to show */
+.error-message.show {
+	opacity: 1;
+	/* Fully visible */
+	visibility: visible;
+	/* Make it visible */
+}
