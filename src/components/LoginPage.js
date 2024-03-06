@@ -6,10 +6,11 @@ import './LoginPage.css';
 function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // New state for toggling password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
-  const { isLoggedIn, login } = useAuth();
+  const { isLoggedIn, login, error } = useAuth();
+  
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -19,6 +20,9 @@ function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    setLoginError('');
+
     try {
       await login(username, password, () => navigate('/'));
     } catch (error) {
@@ -27,7 +31,6 @@ function LoginPage() {
     }
   };
 
-  // Toggle the visibility of the password
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -37,6 +40,7 @@ function LoginPage() {
       <img src="/images/this-is-my-house.gif" alt="Log In" />
       {loginError && <p>{loginError}</p>}
       <form onSubmit={handleLogin}>
+        <div className={`error-message ${error ? 'show' : ''}`}>{error}</div>
         <div>
           <input
             type="text"

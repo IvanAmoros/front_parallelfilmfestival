@@ -8,14 +8,15 @@ const SkillsDisplay = () => {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { user } = useAuth(); // Use useAuth to access the current user state
+  const [showJSON, setShowJSON] = useState(false);
+  const { user } = useAuth();
 
-  const apiUrl = process.env.REACT_APP_API_URL;
+  const apiUrl = process.env.REACT_APP_API_URL + '/base/skills/';
 
   useEffect(() => {
     const fetchSkills = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/base/skills/`);
+        const response = await axios.get(`${apiUrl}`);
         setCategories(response.data);
       } catch (error) {
         setError(error.message);
@@ -27,23 +28,42 @@ const SkillsDisplay = () => {
     fetchSkills();
   }, [apiUrl]);
 
+  const toggleView = () => setShowJSON(!showJSON);
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
+
+  if (showJSON) {
+    return (
+      <div className="skills-display">
+        <h2>My Skills</h2>
+        <button onClick={toggleView}>Show Styled View</button>
+        <h3>GET {apiUrl}</h3>
+        <pre className="json-display">{JSON.stringify(categories, null, 2)}</pre>
+      </div>
+    );
+  }
 
   return (
     <div className="skills-display">
       <h2>My Skills {user?.is_superuser && <Link to="/edit-skills">Edit</Link>}</h2>
+      <button onClick={toggleView}>Show Backend response</button>
       {categories.map((category) => (
         <div key={category.id} className="category-item">
           <h3>{category.name}</h3>
           <ul className="skills-list">
             {category.skills.map((skill) => (
-              <li key={skill.id} className="skill-item">
+              <div key={skill.id} className="skill-item">
                 <div className="skill-content">
                   <span className="skill-name">{skill.name}</span>
-                  <span className="skill-rating">{skill.rating}</span>
+                  <div className="skill-progress-container">
+                    <div className="skill-progress" style={{
+                      '--progress-width': `${(skill.rating / 5) * 100}%`,
+                      animation: 'fillBar 2s ease-out forwards'
+                    }}></div>
+                  </div>
                 </div>
-              </li>
+              </div>
             ))}
           </ul>
         </div>

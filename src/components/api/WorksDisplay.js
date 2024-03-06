@@ -6,13 +6,14 @@ const WorksDisplay = () => {
   const [works, setWorks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showJSON, setShowJSON] = useState(false);
 
-  const apiUrl = process.env.REACT_APP_API_URL;
+  const apiUrl = process.env.REACT_APP_API_URL + '/base/works/';
 
   useEffect(() => {
 	const fetchWorks = async () => {
 	  try {
-		const response = await axios.get(`${apiUrl}/base/works/`);
+		const response = await axios.get(`${apiUrl}`);
 		setWorks(response.data);
 	  } catch (error) {
 		setError(error.message);
@@ -27,9 +28,23 @@ const WorksDisplay = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
+  const toggleView = () => setShowJSON(!showJSON);
+
+  if (showJSON) {
+    return (
+      <div className="skills-display">
+        <h2>Work Experience</h2>
+        <button onClick={toggleView}>Show Styled View</button>
+        <h3>GET {apiUrl}</h3>
+        <pre className="json-display">{JSON.stringify(works, null, 2)}</pre>
+      </div>
+    );
+  }
+
   return (
 	<div className="works-display">
 	  <h2>Work Experience</h2>
+	  <button onClick={toggleView}>Show Backend response</button>
 	  {works.map((work) => (
 		<div key={work.id} className="work-item">
 		  <h3>{work.company}</h3>

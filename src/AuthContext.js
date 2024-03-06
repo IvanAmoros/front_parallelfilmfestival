@@ -8,6 +8,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -33,6 +34,16 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (username, password) => {
+    if (!username && !password) {
+      setError('Please enter a username and password.');
+      return;
+    } else if (!username) {
+      setError('Please enter a username.');
+      return;
+    } else if (!password) {
+      setError('Please enter a password.');
+      return;
+    }
     try {
       const apiUrl = process.env.REACT_APP_API_URL;
       const response = await axios.post(`${apiUrl}/base/api/token/`, {
@@ -44,6 +55,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoggedIn(true);
       setUser({ username: response.data.username, is_superuser: response.data.is_superuser });
     } catch (error) {
+      setError('Failed to login. Please check your username and password.');
       console.error('Login error:', error.response ? error.response.data : error.message);
     }
   };
@@ -56,7 +68,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, error }}>
       {children}
     </AuthContext.Provider>
   );
