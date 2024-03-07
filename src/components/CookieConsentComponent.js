@@ -1,7 +1,7 @@
 import React from 'react';
 import CookieConsent from 'react-cookie-consent';
 
-const GA_CODE = process.env.GA_CODE;
+const GA_CODE = process.env.REACT_APP_GA_CODE;
 
 const CookieConsentComponent = () => {
   const initializeAnalytics = () => {

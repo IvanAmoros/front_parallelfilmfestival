@@ -23,6 +23,7 @@ jobs:
       run: npm run build
       env:
         REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+        REACT_APP_GA_CODE: ${{ secrets.GA_CODE }}
 
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
