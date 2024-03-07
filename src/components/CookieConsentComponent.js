@@ -1,6 +1,8 @@
 import React from 'react';
 import CookieConsent from 'react-cookie-consent';
 
+const GA_CODE = process.env.GA_CODE;
+
 const CookieConsentComponent = () => {
   const initializeAnalytics = () => {
     if (!window.analyticsInitialized) {
@@ -11,7 +13,7 @@ const CookieConsentComponent = () => {
       });
       window.gtag = function() { window.dataLayer.push(arguments); };
       window.gtag('js', new Date());
-      window.gtag('config', 'G-NF487Q1T0Z');
+      window.gtag('config', `${GA_CODE}`);
 
       window.analyticsInitialized = true; // Set a flag to avoid re-initialization
     }
