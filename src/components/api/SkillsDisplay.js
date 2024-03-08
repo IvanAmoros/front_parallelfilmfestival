@@ -59,7 +59,7 @@ const SkillsDisplay = () => {
                   <div className="skill-progress-container">
                     <div className="skill-progress" style={{
                       '--progress-width': `${(skill.rating / 5) * 100}%`,
-                      animation: 'fillBar 2s ease-out forwards'
+                      animation: 'fillBar 1s ease-out forwards'
                     }}></div>
                   </div>
                 </div>
