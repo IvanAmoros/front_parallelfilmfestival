@@ -1,0 +1,132 @@
+.comments-display {
+    margin: 20px auto;
+    min-width: 450px;
+    max-width: 450px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    color: #333;
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 0px;
+}
+
+.comment-header .name {
+    font-weight: bold;
+    margin-top: 3%;
+    margin-left: 5%;
+    margin-bottom: 2%;
+}
+
+
+.comments-list {
+    background-color: #eae6df;
+    margin-top: 5%;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.comments-display h2 {
+    color: #282c34;
+    font-size: 24px;
+    margin-bottom: 2%;
+}
+
+.comment-item {
+    background-color: #e1ffd4;
+    border: 1px solid #e1ffd4;
+    border-radius: 15px;
+    padding-bottom: 5px;
+    margin: 1%;
+    /* margin-bottom: 5px; */
+}
+
+.comment-item:last-child {
+    border-bottom: none;
+    /* No border for the last item */
+}
+
+.comment-links {
+    display: flex;
+    gap: 10px;
+    /* Adds space between links */
+}
+
+
+.comment-links a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.comment-links a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.comment-form {
+    margin-top: 20px;
+}
+
+.comment-form textarea {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+    /* Prevent manual resizing */
+    overflow-y: hidden;
+    /* Prevent scrollbar */
+}
+
+
+.comment-form button {
+    background-color: #26d366;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.comment-form button:hover {
+    background-color: #0056b3;
+}
+
+.comment-body {
+    text-align: left;
+    /* Ensures text alignment is consistent */
+}
+
+.comment-body p {
+    /* Add space below the paragraph if you like */
+    margin-top: 0px;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 1%;
+    flex-grow: 1;
+    text-align: left;
+    overflow-wrap: break-word;
+    /* Allows the text to wrap and break onto the next line */
+    word-break: break-word;
+    /* Ensures even long words without spaces will wrap */
+}
+
+.comment-time {
+    margin-right: 2%;
+    color: #788871;
+    display: block;
+    font-size: 0.7rem;
+    text-align: right;
+}
+
+.responses {
+    margin-left: 20px;
+    border-left: 2px solid #ccc;
+    padding-left: 20px;
+}

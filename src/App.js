@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainPage from "./MainPage";
+import CommentsDisplay from "./components/api/CommentsDisplay";
 import SkillsDisplay from "./components/api/SkillsDisplay";
 import WorksDisplay from "./components/api/WorksDisplay";
 import StudiesDisplay from "./components/api/StudiesDisplay";
@@ -27,6 +28,7 @@ function App() {
                 element={
                   <>
                     <MainPage />
+                    <CommentsDisplay />
                     <SkillsDisplay />
                     <WorksDisplay />
                     <StudiesDisplay />
