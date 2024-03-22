@@ -29,7 +29,6 @@ const CommentsDisplay = () => {
         const fetchComments = async () => {
             try {
                 const response = await axios.get(apiUrl);
-                console.log(response.data);
                 setComments(response.data);
             } catch (error) {
                 setError(error.message);
@@ -138,7 +137,7 @@ const CommentsDisplay = () => {
             <div>
                 <div className="comment-item">
                     <div className="comment-header">
-                    <h3 className="name">{(comment.name || "").trim() ? comment.name : 'Anonymous'}</h3>
+                    <h3 className="name">{comment.user? comment.user : 'Anonymous'}</h3>
 
                         <div className="comment-links">
                             {comment.web_url && <a href={ensureHttpPrefix(comment.web_url)} target="_blank" rel="noopener noreferrer">Website</a>}
