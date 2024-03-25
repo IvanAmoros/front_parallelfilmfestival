@@ -56,12 +56,6 @@ const SkillsDisplay = () => {
               <div key={skill.id} className="skill-item">
                 <div className="skill-content">
                   <span className="skill-name">{skill.name}</span>
-                  <div className="skill-progress-container">
-                    <div className="skill-progress" style={{
-                      '--progress-width': `${(skill.rating / 5) * 100}%`,
-                      animation: 'fillBar 1s ease-out forwards'
-                    }}></div>
-                  </div>
                 </div>
               </div>
             ))}
