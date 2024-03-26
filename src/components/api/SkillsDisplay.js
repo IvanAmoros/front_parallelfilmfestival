@@ -55,6 +55,7 @@ const SkillsDisplay = () => {
             {category.skills.map((skill) => (
               <div key={skill.id} className="skill-item">
                 <div className="skill-content">
+                {skill.logo && <img src={skill.logo} alt={`${skill.name} logo`} className="skill-logo" />}
                   <span className="skill-name">{skill.name}</span>
                 </div>
               </div>
