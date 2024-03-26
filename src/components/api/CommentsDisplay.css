@@ -18,7 +18,7 @@
     }
 
     /* Ensure that the container of the h3 adjusts as well */
-    .comments-display-json, .comments-display {
+    .comments-display {
         padding: 15px; /* Adjust padding to ensure content fits */
     }
 }

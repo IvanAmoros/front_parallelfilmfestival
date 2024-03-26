@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { format, parse, isValid } from 'date-fns';
 import "./StudiesDisplay.css";
 
 const StudiesDisplay = () => {
@@ -24,6 +25,16 @@ const StudiesDisplay = () => {
     fetchStudies();
   }, [apiUrl]);
 
+  const parseDate = (dateString) => {
+    return parse(dateString, "dd/MM/yyyy", new Date());
+  };
+
+  const formatDate = (date) => {
+    if (!date) return ''; // Return an empty string or any default value for invalid/empty dates
+    const parsedDate = parseDate(date);
+    return isValid(parsedDate) ? format(parsedDate, 'MMM yyyy') : 'Invalid date';
+  };
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -34,9 +45,9 @@ const StudiesDisplay = () => {
         <div key={study.id} className="study-item">
           <h3>{study.center}</h3>
           <div className="dates">
-            {study.from_date} - {study.current ? "Present" : study.to_date}
+            {formatDate(study.from_date)} - {study.current ? "Present" : formatDate(study.to_date)}
           </div>
-          <h4>{study.tittle}</h4>
+          <h4>{study.title}</h4>
           <p className="description">{study.description}</p>
           <h4>Skills:</h4>
           <div className="skills">
