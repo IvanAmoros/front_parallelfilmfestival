@@ -11,6 +11,16 @@
 }
 
 @media (min-width: 600px) {
+    h3 {
+        font-size: 16px; /* Reduce font size */
+        word-wrap: break-word; /* Ensure long words can wrap */
+        padding: 0 10px; /* Add some padding on the sides */
+    }
+
+    /* Ensure that the container of the h3 adjusts as well */
+    .comments-display-json, .comments-display {
+        padding: 15px; /* Adjust padding to ensure content fits */
+    }
 }
 
 .comment-header {
