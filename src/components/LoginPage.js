@@ -62,6 +62,7 @@ function LoginPage() {
             {showPassword ? 'Hide' : 'Show'}
           </button>
         </div>
+        {/* <a href="??">Login with Google</a> */}
         <button type="submit">Log In</button>
       </form>
     </div>

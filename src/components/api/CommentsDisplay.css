@@ -134,3 +134,10 @@
     border-left: 2px solid #ccc;
     padding-left: 20px;
 }
+
+.json-display {
+    text-align: left; /* Ensures the text is left-aligned */
+    white-space: pre-wrap; /* Preserves whitespace and formatting */
+    word-wrap: break-word; /* Allows long strings to wrap */
+    font-family: monospace; /* Gives the text a monospaced font, typical for code */
+}
