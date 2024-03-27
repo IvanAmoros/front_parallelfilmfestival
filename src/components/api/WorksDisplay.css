@@ -2,15 +2,15 @@
 .works-display {
 	margin: 20px auto;
 	max-width: 800px;
-	background-color: #f0f0f0;
+	background-color: #526D82;
 	border-radius: 8px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	padding: 20px;
-	color: #333;
+	color: #27374D;
   }
   
   .works-display h2 {
-	color: #282c34;
+	color: #DDE6ED;
 	font-size: 24px;
   }
   
@@ -26,11 +26,11 @@
   
   .work-item h3 {
 	margin: 0;
-	color: #61dafb;
+	color: #27374D;
   }
   
   .work-item .dates {
-	color: #666;
+	color: #9DB2BF;
 	font-size: 14px;
   }
   
@@ -58,8 +58,8 @@
   
   .skill-tag {
 	display: inline-block;
-	background-color: #61dafb;
-	color: #fff;
+	background-color: #DDE6ED;
+	color: #27374D;
 	border-radius: 4px;
 	padding: 2px 8px;
 	margin-right: 5px;

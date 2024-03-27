@@ -2,7 +2,7 @@
 .studies-display {
 	margin: 20px auto;
 	max-width: 800px;
-	background-color: #f0f0f0;
+	background-color: #526D82;
 	border-radius: 8px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	padding: 20px;
@@ -10,7 +10,7 @@
   }
   
   .studies-display h2 {
-	color: #282c34;
+	color: #DDE6ED;
 	font-size: 24px;
   }
   
@@ -26,16 +26,21 @@
   
   .study-item h3 {
 	margin: 0;
-	color: #61dafb;
+	color: #27374D;
   }
   
   .study-item .dates, .study-item h4 {
-	color: #666;
+	color: #9DB2BF;
 	font-size: 14px;
   }
   
   .study-item .description {
 	text-align: left;
 	margin-top: 10px;
+  }
+
+  .skill-tag {
+	color: #27374D;
+	background-color: #DDE6ED;
   }
   

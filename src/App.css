@@ -46,8 +46,8 @@
 }
 
 main {
-  color: #1d1d1f;
-  background-color: white;
+  color: #DDE6ED;
+  background-color: #27374D;
   display: flex;
   flex-direction: column;
   align-items: center;
