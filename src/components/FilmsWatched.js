@@ -8,13 +8,17 @@ import {
   CardContent,
   Typography,
   CardActions,
-  Rating
+  Rating,
+  Snackbar,
+  Alert
 } from '@mui/material';
 
 const api_url = process.env.REACT_APP_API_URL;
 
 const FilmsWatched = () => {
   const [filmsWatched, setFilmsWatched] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   useEffect(() => {
     const fetchFilms = async () => {
@@ -25,7 +29,6 @@ const FilmsWatched = () => {
         console.error('Error fetching data:', error);
       }
     };
-
     fetchFilms();
   }, []);
 
@@ -35,12 +38,16 @@ const FilmsWatched = () => {
       await axios.post(`${api_url}/film-festival/create-rating/${filmId}/`, postData);
       const updatedFilms = filmsWatched.map(film => {
         if (film.id === filmId) {
-          const newAverage = (film.average_rating * film.ratings.length + newValue) / (film.ratings.length + 1);
-          return { ...film, average_rating: newAverage, ratings: [...film.ratings, { stars: newValue }] };
+          const newVoteCount = film.ratings.length + 1;
+          const newRatings = [...film.ratings, { stars: newValue }];
+          const newAverage = newRatings.reduce((acc, curr) => acc + curr.stars, 0) / newRatings.length;
+          return { ...film, average_rating: newAverage, ratings: newRatings, vote_count: newVoteCount };
         }
         return film;
       });
       setFilmsWatched(updatedFilms);
+      setSnackbarMessage(`Has votado con un ${newValue}`);
+      setSnackbarOpen(true);
     } catch (error) {
       console.error('Error posting rating:', error);
     }
@@ -80,18 +87,26 @@ const FilmsWatched = () => {
                 <Rating
                   name="simple-controlled"
                   value={film.average_rating}
-                  size="large"
-                //   precision={1}
-                  max={10}
                   onChange={(event, newValue) => {
                     handleRating(newValue, film.id);
                   }}
+                  max={10}
                 />
               </CardActions>
             </Card>
           </Grid>
         ))}
       </Grid>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
