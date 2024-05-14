@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainPage from './MainPage';
 // import LoginPage from './LoginPage';
 import CookieConsentComponent from './components/CookieConsentComponent';
+import FilmFestival from './components/FilmFestival';
 import { AuthProvider } from './AuthContext';
 
 
@@ -23,6 +24,7 @@ function App() {
                   <CookieConsentComponent />
                 </>
               } />
+              <Route path="/film-festival" element={<FilmFestival />} />
               {/* <Route path="/login" element={<LoginPage />} /> */}
             </Routes>
           </main>
