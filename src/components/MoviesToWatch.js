@@ -32,7 +32,7 @@ const MoviesToWatch = () => {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await axios.get(`${api_url}/film-festival/films-to-watch/`);
+        const response = await axios.get(`https://${api_url}/film-festival/films-to-watch/`);
         setMoviesToWatch(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -54,7 +54,7 @@ const MoviesToWatch = () => {
         return movie;
       });
       setMoviesToWatch(updatedMovies);
-      await axios.post(`${api_url}/film-festival/increase-up-votes/${filmId}/`);
+      await axios.post(`https://${api_url}/film-festival/increase-up-votes/${filmId}/`);
     } catch (error) {
       console.error('Error increasing up-votes:', error);
     }
@@ -62,7 +62,7 @@ const MoviesToWatch = () => {
 
   const markAsWatched = async (filmId) => {
     try {
-      await axios.post(`${api_url}/film-festival/mark-as-watched/${filmId}/`);
+      await axios.post(`https://${api_url}/film-festival/mark-as-watched/${filmId}/`);
       window.location.reload();
       const updatedMovies = moviesToWatch.map(movie => {
         if (movie.id === filmId) {
