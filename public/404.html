@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+    // Redirects to index.html while preserving the path
+    sessionStorage.redirect = location.href;
+    location.href = '/';
+  </script>
+</head>
+<body>
+  Redirecting...
+</body>
+</html>
