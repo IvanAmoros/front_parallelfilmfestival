@@ -22,6 +22,13 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Ivan Amorós</title>
+    <script>
+      if (sessionStorage.redirect) {
+        const redirectUrl = sessionStorage.redirect;
+        sessionStorage.removeItem('redirect');
+        history.replaceState(null, null, redirectUrl.replace(location.origin, ''));
+      }
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

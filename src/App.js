@@ -1,17 +1,16 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainPage from './MainPage';
-// import LoginPage from './LoginPage';
 import CookieConsentComponent from './components/CookieConsentComponent';
 import FilmFestival from './components/FilmFestival';
 import { AuthProvider } from './AuthContext';
 
-
 function App() {
   return (
     <AuthProvider>
-      <Router>
+      {/* Set the basename here if your project is served from a subdirectory */}
+      <Router basename="/film-festival">
         <div className="App">
           <header className="App-header">
             {/* Header content if any */}
