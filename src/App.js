@@ -10,20 +10,20 @@ function App() {
   return (
     <AuthProvider>
       {/* Set the basename here if your project is served from a subdirectory */}
-      <Router basename="/film-festival">
+      <Router>
         <div className="App">
           <header className="App-header">
             {/* Header content if any */}
           </header>
           <main>
             <Routes>
-              <Route path="/" element={
+              <Route path="/main" element={
                 <>
                   <MainPage />
                   <CookieConsentComponent />
                 </>
               } />
-              <Route path="/film-festival" element={<FilmFestival />} />
+              <Route path="/" element={<FilmFestival />} />
               {/* <Route path="/login" element={<LoginPage />} /> */}
             </Routes>
           </main>
