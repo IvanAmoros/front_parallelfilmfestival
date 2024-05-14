@@ -24,9 +24,13 @@
     <title>Ivan Amorós</title>
     <script>
       if (sessionStorage.redirect) {
-        const redirectUrl = sessionStorage.redirect;
+        const redirectUrl = new URL(sessionStorage.redirect);
         sessionStorage.removeItem('redirect');
-        history.replaceState(null, null, redirectUrl.replace(location.origin, ''));
+        const pathname = redirectUrl.pathname;
+        // Check if the pathname includes the base path of your SPA
+        const basePath = '/film-festival';
+        const spaPath = pathname.includes(basePath) ? pathname.split(basePath)[1] : '/';
+        history.replaceState(null, null, basePath + spaPath);
       }
     </script>
   </head>
