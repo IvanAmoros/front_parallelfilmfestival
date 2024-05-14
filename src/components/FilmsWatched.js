@@ -19,7 +19,7 @@ const FilmsWatched = () => {
   useEffect(() => {
     const fetchFilms = async () => {
       try {
-        const response = await axios.get(`https://${api_url}/film-festival/films-watched/`);
+        const response = await axios.get(`${api_url}/film-festival/films-watched/`);
         setFilmsWatched(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -32,7 +32,7 @@ const FilmsWatched = () => {
   const handleRating = async (newValue, filmId) => {
     try {
       const postData = { stars: newValue };
-      await axios.post(`https://${api_url}/film-festival/create-rating/${filmId}/`, postData);
+      await axios.post(`${api_url}/film-festival/create-rating/${filmId}/`, postData);
       const updatedFilms = filmsWatched.map(film => {
         if (film.id === filmId) {
           const newAverage = (film.average_rating * film.ratings.length + newValue) / (film.ratings.length + 1);
