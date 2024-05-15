@@ -88,7 +88,7 @@ const MovieSearch = () => {
     }, [movies]);
 
     return (
-        <Container>
+        <Container sx={{ px: 0.5 }}>
             <Typography variant="h4" component="h1" gutterBottom>
                 Busca tu propuesta
             </Typography>
@@ -130,7 +130,7 @@ const MovieSearch = () => {
                                         sx={{ height: 300 }}
                                     />
                                 )}
-                                <CardContent>
+                                <CardContent sx={{ padding: 0, paddingTop: 1 }}>
                                     <Typography variant="h6">{movie.title}</Typography>
                                     <Typography variant="body2" color="textSecondary">
                                         Rating: {movie.vote_average}
@@ -152,11 +152,12 @@ const MovieSearch = () => {
                             </Collapse>
                             <CardActions>
                                 <Button
+                                fullWidth
                                     variant="contained"
                                     color="primary"
                                     onClick={() => markAsProposal(movie)}
                                 >
-                                    Marcar como propuesta
+                                    PROPONER
                                 </Button>
                             </CardActions>
                         </Card>

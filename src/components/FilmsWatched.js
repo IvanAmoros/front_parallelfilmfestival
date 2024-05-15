@@ -82,7 +82,7 @@ const FilmsWatched = () => {
   };
 
   return (
-    <Container>
+    <Container sx={{ px: 0.5 }}>
       <Typography variant="h4" component="h1" gutterBottom>
         Ya vistas
       </Typography>
@@ -97,11 +97,7 @@ const FilmsWatched = () => {
                   alt={`${film.tittle} Poster`}
                   sx={{ height: 300 }}
                 />
-                <CardContent>
-                  <Typography variant="h6">{film.tittle}</Typography>
-                  <Typography variant="subtitle1">
-                    Vista: {film.watched_date}
-                  </Typography>
+                <CardContent sx={{ padding: 0, paddingTop: 1 }}>
                   <Typography variant="subtitle1">
                     Rating: {film.average_rating.toFixed(2)} ({film.vote_count})
                   </Typography>
@@ -116,13 +112,18 @@ const FilmsWatched = () => {
               </CardActionArea>
               <Collapse in={expanded[film.id]} timeout="auto" unmountOnExit>
                 <CardContent>
+                  <Typography variant="h6">{film.tittle}</Typography>
+                  <Typography variant="subtitle1">
+                    Vista: {film.watched_date}
+                  </Typography>
                   <Typography variant="body2" color="textSecondary">
                     {film.description}
                   </Typography>
                 </CardContent>
               </Collapse>
-              <CardActions sx={{ justifyContent: 'center', padding: '16px' }}>
+              <CardActions sx={{ justifyContent: 'center', padding: 1 }}>
                 <Button
+                  fullWidth
                   variant="contained"
                   color="primary"
                   onClick={() => openRatingModal(film)}

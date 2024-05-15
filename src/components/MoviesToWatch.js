@@ -30,7 +30,6 @@ const MoviesToWatch = () => {
   const [selectedFilmId, setSelectedFilmId] = useState(null);
   const [expanded, setExpanded] = useState({});
 
-
   useEffect(() => {
     const fetchMovies = async () => {
       try {
@@ -93,11 +92,11 @@ const MoviesToWatch = () => {
   };
 
   return (
-    <Container>
+    <Container sx={{ px: 0.5 }}>
       <Typography variant="h4" component="h1" gutterBottom>
         Pendientes de ver
       </Typography>
-      <Grid container spacing={1}>
+      <Grid container spacing={1} padding={0}>
         {moviesToWatch.map((movie) => (
           <Grid item xs={6} sm={4} md={3} key={movie.id}>
             <Card>
@@ -108,7 +107,7 @@ const MoviesToWatch = () => {
                   alt={`${movie.tittle} Poster`}
                   sx={{ height: 300 }}
                 />
-                <CardContent>
+                <CardContent sx={{ padding: 0, paddingTop: 1}}>
                   <Typography variant="h6">{movie.tittle}</Typography>
                   <Typography variant="subtitle1">Up Votes: {movie.up_votes}</Typography>
                 </CardContent>
@@ -121,23 +120,31 @@ const MoviesToWatch = () => {
                 </CardContent>
               </Collapse>
               <CardActions>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => increaseUpVotes(movie.id)}
-                >
-                  Votar
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    setSelectedFilmId(movie.id);
-                    setOpenDialog(true);
-                  }}
-                >
-                  Vista
-                </Button>
+                <Grid container spacing={1}>
+                  <Grid item xs={6}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      onClick={() => increaseUpVotes(movie.id)}
+                    >
+                      Votar
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      onClick={() => {
+                        setSelectedFilmId(movie.id);
+                        setOpenDialog(true);
+                      }}
+                    >
+                      Vista
+                    </Button>
+                  </Grid>
+                </Grid>
               </CardActions>
             </Card>
           </Grid>
