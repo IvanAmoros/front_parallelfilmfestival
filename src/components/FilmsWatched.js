@@ -86,7 +86,7 @@ const FilmsWatched = () => {
       <Typography variant="h4" component="h1" gutterBottom>
         Ya vistas
       </Typography>
-      <Grid container spacing={3}>
+      <Grid container spacing={1}>
         {filmsWatched.map((film) => (
           <Grid item xs={6} sm={4} md={3} key={film.id}>
             <Card>
