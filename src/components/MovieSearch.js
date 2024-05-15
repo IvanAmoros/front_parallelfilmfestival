@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import {
     Button,
@@ -13,7 +13,8 @@ import {
     CardMedia,
     CardActions,
     CardActionArea,
-    Collapse
+    Collapse,
+    Box
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -25,6 +26,7 @@ const MovieSearch = () => {
     const [query, setQuery] = useState('');
     const [movies, setMovies] = useState([]);
     const [expanded, setExpanded] = useState({});
+    const searchBoxRef = useRef(null);
 
     const searchMovie = async () => {
         const options = {
@@ -58,7 +60,7 @@ const MovieSearch = () => {
         }
     };
 
-    const markAsproposal = async (movie) => {
+    const markAsProposal = async (movie) => {
         const postData = {
             tittle: movie.original_title || movie.title,
             image: `https://image.tmdb.org/t/p/w300${movie.poster_path}`,
@@ -77,31 +79,38 @@ const MovieSearch = () => {
         setExpanded(prevState => ({ ...prevState, [movieId]: !prevState[movieId] }));
     };
 
+    useEffect(() => {
+        if (movies.length > 0) {
+            searchBoxRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [movies]);
+
     return (
         <Container>
             <Typography variant="h4" component="h1" gutterBottom>
                 Busca tu propuesta
             </Typography>
-            <TextField
-                label="Enter movie title"
-                variant="outlined"
-                fullWidth
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyPress={handleKeyPress}
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <IconButton onClick={searchMovie}>
-                                <SearchIcon />
-                            </IconButton>
-                        </InputAdornment>
-                    ),
-                }}
-                sx={{ marginBottom: 3 }}
-            />
-            <Typography variant="h5" component="h2">
-                Resultados de busqueda
+            <Box ref={searchBoxRef} sx={{ backgroundColor: 'white', padding: 2, borderRadius: 1, mb: 3 }}>
+                <TextField
+                    label="Enter movie title"
+                    variant="outlined"
+                    fullWidth
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton onClick={searchMovie}>
+                                    <SearchIcon />
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+            </Box>
+            <Typography variant="h5" component="h2" mb={5}>
+                Resultados de búsqueda
             </Typography>
             <Grid container spacing={3}>
                 {movies.map((movie) => (
@@ -118,9 +127,6 @@ const MovieSearch = () => {
                                 )}
                                 <CardContent>
                                     <Typography variant="h6">{movie.title}</Typography>
-                                    {/* <Typography variant="body2" color="textSecondary">
-                                    {movie.overview}
-                                </Typography> */}
                                     <Typography variant="body2" color="textSecondary">
                                         Rating: {movie.vote_average}
                                     </Typography>
@@ -143,7 +149,7 @@ const MovieSearch = () => {
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    onClick={() => markAsproposal(movie)}
+                                    onClick={() => markAsProposal(movie)}
                                 >
                                     Marcar como propuesta
                                 </Button>
