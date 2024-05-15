@@ -10,7 +10,7 @@ const FilmFestival = () => {
     return (
         <div>
             <Typography variant="h1" component="h1">
-                Parallel Film Festival
+                Paral·lel Film Festival
             </Typography>
             <FilmsWatched />
             <MoviesToWatch />
