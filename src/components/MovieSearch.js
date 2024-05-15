@@ -117,19 +117,28 @@ const MovieSearch = () => {
                     Resultados de búsqueda
                 </Typography>
             )}
-            <Grid container spacing={1} mb={2}>
+            <Grid container spacing={0.5} mb={2}>
                 {movies.map((movie) => (
                     <Grid item xs={6} sm={4} md={3} key={movie.id}>
                         <Card>
                             <CardActionArea onClick={() => handleExpandClick(movie.id)}>
-                                {movie.poster_path && (
-                                    <CardMedia
-                                        component="img"
-                                        image={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
-                                        alt={`${movie.title} Poster`}
-                                        sx={{ height: 300 }}
-                                    />
-                                )}
+                                <Box sx={{ position: 'relative', paddingTop: '150%' }}>
+                                    {movie.poster_path && (
+                                        <CardMedia
+                                            component="img"
+                                            image={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
+                                            alt={`${movie.title} Poster`}
+                                            sx={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                width: '100%',
+                                                height: '100%',
+                                                objectFit: 'cover'
+                                            }}
+                                        />
+                                    )}
+                                </Box>
                                 <CardContent sx={{ padding: 0, paddingTop: 1 }}>
                                     <Typography variant="h6">{movie.title}</Typography>
                                     <Typography variant="body2" color="textSecondary">
@@ -152,7 +161,7 @@ const MovieSearch = () => {
                             </Collapse>
                             <CardActions>
                                 <Button
-                                fullWidth
+                                    fullWidth
                                     variant="contained"
                                     color="primary"
                                     onClick={() => markAsProposal(movie)}
