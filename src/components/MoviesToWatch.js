@@ -15,7 +15,9 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
+  CardActionArea,
+  Collapse
 } from '@mui/material';
 
 const api_url = process.env.REACT_APP_API_URL;
@@ -26,7 +28,7 @@ const MoviesToWatch = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedFilmId, setSelectedFilmId] = useState(null);
-
+  const [expanded, setExpanded] = useState({});
 
 
   useEffect(() => {
@@ -86,28 +88,38 @@ const MoviesToWatch = () => {
     }
   };
 
+  const handleExpandClick = (movieId) => {
+    setExpanded(prevState => ({ ...prevState, [movieId]: !prevState[movieId] }));
+  };
+
   return (
     <Container>
       <Typography variant="h4" component="h1" gutterBottom>
-        Films to Watch
+        Pendientes de ver
       </Typography>
       <Grid container spacing={3}>
         {moviesToWatch.map((movie) => (
-          <Grid item xs={12} sm={6} md={4} key={movie.id}>
+          <Grid item xs={6} sm={4} md={3} key={movie.id}>
             <Card>
-              <CardMedia
-                component="img"
-                image={movie.image}
-                alt={`${movie.tittle} Poster`}
-                sx={{ height: 450 }}
-              />
-              <CardContent>
-                <Typography variant="h6">{movie.tittle}</Typography>
-                <Typography variant="subtitle1">Up Votes: {movie.up_votes}</Typography>
-                <Typography variant="body2" color="textSecondary">
-                  {movie.description}
-                </Typography>
-              </CardContent>
+              <CardActionArea onClick={() => handleExpandClick(movie.id)}>
+                <CardMedia
+                  component="img"
+                  image={movie.image}
+                  alt={`${movie.tittle} Poster`}
+                  sx={{ height: 300 }}
+                />
+                <CardContent>
+                  <Typography variant="h6">{movie.tittle}</Typography>
+                  <Typography variant="subtitle1">Up Votes: {movie.up_votes}</Typography>
+                </CardContent>
+              </CardActionArea>
+              <Collapse in={expanded[movie.id]} timeout="auto" unmountOnExit>
+                <CardContent>
+                  <Typography variant="body2" color="textSecondary">
+                    {movie.description}
+                  </Typography>
+                </CardContent>
+              </Collapse>
               <CardActions>
                 <Button
                   variant="contained"

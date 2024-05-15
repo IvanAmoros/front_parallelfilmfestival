@@ -12,6 +12,8 @@ import {
     CardContent,
     CardMedia,
     CardActions,
+    CardActionArea,
+    Collapse
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -22,6 +24,7 @@ const api_url = process.env.REACT_APP_API_URL;
 const MovieSearch = () => {
     const [query, setQuery] = useState('');
     const [movies, setMovies] = useState([]);
+    const [expanded, setExpanded] = useState({});
 
     const searchMovie = async () => {
         const options = {
@@ -70,6 +73,10 @@ const MovieSearch = () => {
         }
     };
 
+    const handleExpandClick = (movieId) => {
+        setExpanded(prevState => ({ ...prevState, [movieId]: !prevState[movieId] }));
+    };
+
     return (
         <Container>
             <Typography variant="h4" component="h1" gutterBottom>
@@ -94,32 +101,44 @@ const MovieSearch = () => {
                 sx={{ marginBottom: 3 }}
             />
             <Typography variant="h5" component="h2">
-                Search Results
+                Resultados de busqueda
             </Typography>
             <Grid container spacing={3}>
                 {movies.map((movie) => (
-                    <Grid item xs={12} sm={6} md={4} key={movie.id}>
+                    <Grid item xs={6} sm={4} md={3} key={movie.id}>
                         <Card>
-                            {movie.poster_path && (
-                                <CardMedia
-                                    component="img"
-                                    image={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
-                                    alt={`${movie.title} Poster`}
-                                    sx={{ height: 450 }}
-                                />
-                            )}
-                            <CardContent>
-                                <Typography variant="h6">{movie.title}</Typography>
-                                <Typography variant="body2" color="textSecondary">
+                            <CardActionArea onClick={() => handleExpandClick(movie.id)}>
+                                {movie.poster_path && (
+                                    <CardMedia
+                                        component="img"
+                                        image={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
+                                        alt={`${movie.title} Poster`}
+                                        sx={{ height: 300 }}
+                                    />
+                                )}
+                                <CardContent>
+                                    <Typography variant="h6">{movie.title}</Typography>
+                                    {/* <Typography variant="body2" color="textSecondary">
                                     {movie.overview}
-                                </Typography>
-                                <Typography variant="body2" color="textSecondary">
-                                    Rating: {movie.vote_average} ({movie.vote_count} votes)
-                                </Typography>
-                                <Typography variant="body2" color="textSecondary">
-                                    Release Date: {movie.release_date}
-                                </Typography>
-                            </CardContent>
+                                </Typography> */}
+                                    <Typography variant="body2" color="textSecondary">
+                                        Rating: {movie.vote_average}
+                                    </Typography>
+                                    <Typography variant="body2" color="textSecondary">
+                                        ({movie.vote_count} votes)
+                                    </Typography>
+                                    <Typography variant="body2" color="textSecondary">
+                                        Release Date: {movie.release_date}
+                                    </Typography>
+                                </CardContent>
+                            </CardActionArea>
+                            <Collapse in={expanded[movie.id]} timeout="auto" unmountOnExit>
+                                <CardContent>
+                                    <Typography variant="body2" color="textSecondary">
+                                        {movie.overview}
+                                    </Typography>
+                                </CardContent>
+                            </Collapse>
                             <CardActions>
                                 <Button
                                     variant="contained"
