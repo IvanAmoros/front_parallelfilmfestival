@@ -19,6 +19,7 @@ import {
   DialogContent,
   DialogTitle,
   DialogContentText,
+  Box
 } from '@mui/material';
 
 const api_url = process.env.REACT_APP_API_URL;
@@ -86,17 +87,26 @@ const FilmsWatched = () => {
       <Typography variant="h4" component="h1" gutterBottom>
         Ya vistas
       </Typography>
-      <Grid container spacing={1}>
+      <Grid container spacing={0.5}>
         {filmsWatched.map((film) => (
           <Grid item xs={6} sm={4} md={3} key={film.id}>
             <Card>
               <CardActionArea onClick={() => handleExpandClick(film.id)}>
-                <CardMedia
-                  component="img"
-                  image={film.image}
-                  alt={`${film.tittle} Poster`}
-                  sx={{ height: 300 }}
-                />
+                <Box sx={{ position: 'relative', paddingTop: '150%' }}>
+                  <CardMedia
+                    component="img"
+                    image={film.image}
+                    alt={`${film.tittle} Poster`}
+                    sx={{ 
+                      position: 'absolute', 
+                      top: 0, 
+                      left: 0, 
+                      width: '100%', 
+                      height: '100%', 
+                      objectFit: 'cover' 
+                    }}
+                  />
+                </Box>
                 <CardContent sx={{ padding: 0, paddingTop: 1 }}>
                   <Typography variant="subtitle1">
                     Rating: {film.average_rating.toFixed(2)} ({film.vote_count})

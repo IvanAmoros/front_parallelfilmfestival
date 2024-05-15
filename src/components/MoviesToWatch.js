@@ -17,7 +17,8 @@ import {
   DialogContentText,
   DialogTitle,
   CardActionArea,
-  Collapse
+  Collapse,
+  Box
 } from '@mui/material';
 
 const api_url = process.env.REACT_APP_API_URL;
@@ -96,18 +97,27 @@ const MoviesToWatch = () => {
       <Typography variant="h4" component="h1" gutterBottom>
         Pendientes de ver
       </Typography>
-      <Grid container spacing={1} padding={0}>
+      <Grid container spacing={0.5} padding={0}>
         {moviesToWatch.map((movie) => (
           <Grid item xs={6} sm={4} md={3} key={movie.id}>
             <Card>
               <CardActionArea onClick={() => handleExpandClick(movie.id)}>
-                <CardMedia
-                  component="img"
-                  image={movie.image}
-                  alt={`${movie.tittle} Poster`}
-                  sx={{ height: 300 }}
-                />
-                <CardContent sx={{ padding: 0, paddingTop: 1}}>
+                <Box sx={{ position: 'relative', paddingTop: '150%' }}>
+                  <CardMedia
+                    component="img"
+                    image={movie.image}
+                    alt={`${movie.tittle} Poster`}
+                    sx={{ 
+                      position: 'absolute', 
+                      top: 0, 
+                      left: 0, 
+                      width: '100%', 
+                      height: '100%', 
+                      objectFit: 'cover' 
+                    }}
+                  />
+                </Box>
+                <CardContent sx={{ padding: 0, paddingTop: 1 }}>
                   <Typography variant="h6">{movie.tittle}</Typography>
                   <Typography variant="subtitle1">Up Votes: {movie.up_votes}</Typography>
                 </CardContent>
