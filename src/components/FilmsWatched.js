@@ -10,7 +10,15 @@ import {
   CardActions,
   Rating,
   Snackbar,
-  Alert
+  Alert,
+  CardActionArea,
+  Collapse,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  DialogContentText,
 } from '@mui/material';
 
 const api_url = process.env.REACT_APP_API_URL;
@@ -19,6 +27,10 @@ const FilmsWatched = () => {
   const [filmsWatched, setFilmsWatched] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [expanded, setExpanded] = useState({});
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedFilm, setSelectedFilm] = useState(null);
+  const [rating, setRating] = useState(0);
 
   useEffect(() => {
     const fetchFilms = async () => {
@@ -48,50 +60,75 @@ const FilmsWatched = () => {
       setFilmsWatched(updatedFilms);
       setSnackbarMessage(`Has votado con un ${newValue}`);
       setSnackbarOpen(true);
+      setOpenModal(false);
     } catch (error) {
       console.error('Error posting rating:', error);
     }
   };
 
+  const handleExpandClick = (movieId) => {
+    setExpanded(prevState => ({ ...prevState, [movieId]: !prevState[movieId] }));
+  };
+
+  const openRatingModal = (film) => {
+    setSelectedFilm(film);
+    setOpenModal(true);
+  };
+
+  const closeModal = () => {
+    setOpenModal(false);
+    setSelectedFilm(null);
+    setRating(0);
+  };
+
   return (
     <Container>
       <Typography variant="h4" component="h1" gutterBottom>
-        Films Watched
+        Ya vistas
       </Typography>
       <Grid container spacing={3}>
         {filmsWatched.map((film) => (
-          <Grid item xs={12} sm={6} md={4} key={film.id}>
+          <Grid item xs={6} sm={4} md={3} key={film.id}>
             <Card>
-              <CardMedia
-                component="img"
-                image={film.image}
-                alt={`${film.tittle} Poster`}
-                sx={{ height: 450 }}
-              />
-              <CardContent>
-                <Typography variant="h6">{film.tittle}</Typography>
-                <Typography variant="body2" color="textSecondary">
-                  {film.description}
-                </Typography>
-                <Typography variant="subtitle1">
-                  Watched on: {film.watched_date}
-                </Typography>
-                <Typography variant="subtitle1">
-                  Average Rating: {film.average_rating.toFixed(2)}
-                </Typography>
-                <Typography variant="subtitle1">
-                  Votes: {film.vote_count}
-                </Typography>
-              </CardContent>
-              <CardActions sx={{ justifyContent: 'center', padding: '16px' }}>
-                <Rating
-                  name="simple-controlled"
-                  value={film.average_rating}
-                  onChange={(event, newValue) => {
-                    handleRating(newValue, film.id);
-                  }}
-                  max={10}
+              <CardActionArea onClick={() => handleExpandClick(film.id)}>
+                <CardMedia
+                  component="img"
+                  image={film.image}
+                  alt={`${film.tittle} Poster`}
+                  sx={{ height: 300 }}
                 />
+                <CardContent>
+                  <Typography variant="h6">{film.tittle}</Typography>
+                  <Typography variant="subtitle1">
+                    Vista: {film.watched_date}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    Rating: {film.average_rating.toFixed(2)} ({film.vote_count})
+                  </Typography>
+                  <Rating
+                    name="read-only"
+                    value={film.average_rating / 2}
+                    readOnly
+                    precision={0.1}
+                    max={5}
+                  />
+                </CardContent>
+              </CardActionArea>
+              <Collapse in={expanded[film.id]} timeout="auto" unmountOnExit>
+                <CardContent>
+                  <Typography variant="body2" color="textSecondary">
+                    {film.description}
+                  </Typography>
+                </CardContent>
+              </Collapse>
+              <CardActions sx={{ justifyContent: 'center', padding: '16px' }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => openRatingModal(film)}
+                >
+                  Valorar
+                </Button>
               </CardActions>
             </Card>
           </Grid>
@@ -107,6 +144,32 @@ const FilmsWatched = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+      <Dialog open={openModal} onClose={closeModal}>
+        <DialogTitle>Valorar película</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {selectedFilm && selectedFilm.tittle}
+          </DialogContentText>
+          <Rating
+            name="rating-controlled"
+            value={rating}
+            onChange={(event, newValue) => setRating(newValue)}
+            max={10}
+            precision={1}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeModal} color="primary">
+            Cancelar
+          </Button>
+          <Button
+            onClick={() => handleRating(rating, selectedFilm.id)}
+            color="primary"
+          >
+            Valorar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

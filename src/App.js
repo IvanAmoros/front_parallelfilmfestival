@@ -9,7 +9,6 @@ import { AuthProvider } from './AuthContext';
 function App() {
   return (
     <AuthProvider>
-      {/* Set the basename here if your project is served from a subdirectory */}
       <Router>
         <div className="App">
           <header className="App-header">
