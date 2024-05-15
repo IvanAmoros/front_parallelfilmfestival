@@ -27,6 +27,7 @@ const MovieSearch = () => {
     const [movies, setMovies] = useState([]);
     const [expanded, setExpanded] = useState({});
     const searchBoxRef = useRef(null);
+    const inputRef = useRef(null);
 
     const searchMovie = async () => {
         const options = {
@@ -49,6 +50,7 @@ const MovieSearch = () => {
             const response = await axios.request(options);
             const sortedMovies = response.data.results.sort((a, b) => b.popularity - a.popularity);
             setMovies(sortedMovies || []);
+            inputRef.current.blur();
         } catch (error) {
             console.error('Error:', error);
         }
@@ -92,6 +94,7 @@ const MovieSearch = () => {
             </Typography>
             <Box ref={searchBoxRef} sx={{ backgroundColor: 'white', padding: 2, borderRadius: 1, mb: 3 }}>
                 <TextField
+                    inputRef={inputRef}
                     label="Enter movie title"
                     variant="outlined"
                     fullWidth
