@@ -25,6 +25,7 @@ jobs:
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
           REACT_APP_TMDB_KEY: ${{ secrets.REACT_APP_TMDB_KEY }}
           REACT_APP_TMDB_TOKEN: ${{ secrets.REACT_APP_TMDB_TOKEN }}
+          REACT_APP_OMDB_KEY: ${{ secrets.REACT_APP_OMDB_KEY }}
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
