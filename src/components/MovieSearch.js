@@ -109,10 +109,12 @@ const MovieSearch = () => {
                     }}
                 />
             </Box>
-            <Typography variant="h5" component="h2" mb={5}>
-                Resultados de búsqueda
-            </Typography>
-            <Grid container spacing={3}>
+            {movies.length > 0 && (
+                <Typography variant="h5" component="h2" mb={3}>
+                    Resultados de búsqueda
+                </Typography>
+            )}
+            <Grid container spacing={3} mb={2}>
                 {movies.map((movie) => (
                     <Grid item xs={6} sm={4} md={3} key={movie.id}>
                         <Card>
