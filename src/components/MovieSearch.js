@@ -31,7 +31,7 @@ const MovieSearch = () => {
     const searchMovie = async () => {
         const options = {
             method: 'GET',
-            url: 'http://www.omdbapi.com/',
+            url: 'https://www.omdbapi.com/',
             params: {
                 apikey: omdbApiKey,
                 s: query,
@@ -66,7 +66,7 @@ const MovieSearch = () => {
     const getMovieDetails = async (imdbID) => {
         const options = {
             method: 'GET',
-            url: 'http://www.omdbapi.com/',
+            url: 'https://www.omdbapi.com/',
             params: {
                 apikey: omdbApiKey,
                 i: imdbID,

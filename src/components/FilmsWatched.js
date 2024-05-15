@@ -82,6 +82,17 @@ const FilmsWatched = () => {
     setRating(0);
   };
 
+  const formatVotes = (votes) => {
+    if (!votes) return 'N/A';
+    const numericVotes = parseInt(votes.replace(/,/g, ''), 10);
+    if (numericVotes >= 1000000) {
+        return (numericVotes / 1000000).toFixed(1).replace('.', ',') + ' M';
+    } else if (numericVotes >= 1000) {
+        return (numericVotes / 1000).toFixed(1).replace('.', ',') + ' mil';
+    }
+    return numericVotes.toString();
+};
+
   return (
     <Container sx={{ px: 0.5 }}>
       <Typography variant="h4" component="h1" gutterBottom>
@@ -129,6 +140,24 @@ const FilmsWatched = () => {
                   <Typography variant="body2" color="textSecondary">
                     {film.description}
                   </Typography>
+                  <Typography variant="body2" color="textSecondary">
+										Genre: {film.genre}
+									</Typography>
+									<Typography variant="body2" color="textSecondary">
+										Director: {film.director}
+									</Typography>
+									<Typography variant="body2" color="textSecondary">
+										Actors: {film.actors}
+									</Typography>
+									<Typography variant="body2" color="textSecondary">
+										Year: {film.year}
+									</Typography>
+									<Typography variant="body2" color="textSecondary">
+										Runtime: {film.runtime}
+									</Typography>
+									<Typography variant="body2" color="textSecondary">
+										{film.imdb_rating}/10 ({formatVotes(film.imdb_votes)} votos)
+									</Typography>
                 </CardContent>
               </Collapse>
               <CardActions sx={{ justifyContent: 'center', padding: 1 }}>
