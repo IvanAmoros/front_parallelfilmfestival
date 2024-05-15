@@ -18,8 +18,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-const token = process.env.REACT_APP_TMDB_TOKEN;
-const key = process.env.REACT_APP_TMDB_KEY;
+const omdbApiKey = process.env.REACT_APP_OMDB_KEY;
 const api_url = process.env.REACT_APP_API_URL;
 
 const MovieSearch = () => {
@@ -32,27 +31,56 @@ const MovieSearch = () => {
     const searchMovie = async () => {
         const options = {
             method: 'GET',
-            url: 'https://api.themoviedb.org/3/search/movie',
+            url: 'http://www.omdbapi.com/',
             params: {
-                api_key: key,
-                query: query,
-                include_adult: 'false',
-                language: 'en-US',
-                page: '1',
-            },
-            headers: {
-                accept: 'application/json',
-                Authorization: `Bearer ${token}`,
-            },
+                apikey: omdbApiKey,
+                s: query,
+                type: 'movie',
+            }
         };
 
         try {
             const response = await axios.request(options);
-            const sortedMovies = response.data.results.sort((a, b) => b.popularity - a.popularity);
-            setMovies(sortedMovies || []);
+            if (response.data.Response === 'True') {
+                const initialMovies = response.data.Search;
+                const detailedMoviesPromises = initialMovies.map(movie =>
+                    getMovieDetails(movie.imdbID)
+                );
+                const detailedMovies = await Promise.all(detailedMoviesPromises);
+
+                // Merge basic and detailed movie data
+                const mergedMovies = initialMovies.map((movie, index) => {
+                    return { ...movie, details: detailedMovies[index] };
+                });
+
+                setMovies(mergedMovies);
+            } else {
+                setMovies([]);
+            }
             inputRef.current.blur();
         } catch (error) {
             console.error('Error:', error);
+        }
+    };
+
+    const getMovieDetails = async (imdbID) => {
+        const options = {
+            method: 'GET',
+            url: 'http://www.omdbapi.com/',
+            params: {
+                apikey: omdbApiKey,
+                i: imdbID,
+                plot: 'short',
+                r: 'json'
+            }
+        };
+
+        try {
+            const response = await axios.request(options);
+            return response.data;
+        } catch (error) {
+            console.error('Error:', error);
+            return null;
         }
     };
 
@@ -64,11 +92,18 @@ const MovieSearch = () => {
 
     const markAsProposal = async (movie) => {
         const postData = {
-            tittle: movie.original_title || movie.title,
-            image: `https://image.tmdb.org/t/p/w300${movie.poster_path}`,
-            description: movie.overview,
+            tittle: movie.Title,
+            image: movie.Poster,
+            description: movie.details ? movie.details.Plot : null,
+            year: movie.details ? movie.details.Year : null,
+            runtime: movie.details ? movie.details.Runtime : null,
+            genre: movie.details ? movie.details.Genre : null,
+            director: movie.details ? movie.details.Director : null,
+            actors: movie.details ? movie.details.Actors : null,
+            imdb_rating: movie.details ? movie.details.imdbRating : null,
+            imdb_votes: movie.details ? movie.details.imdbVotes : null,
+            imdb_id: movie.details ? movie.details.imdbID : null
         };
-
         try {
             await axios.post(`${api_url}/film-festival/films-to-watch/`, postData);
             window.location.reload();
@@ -86,6 +121,17 @@ const MovieSearch = () => {
             searchBoxRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }, [movies]);
+
+    const formatVotes = (votes) => {
+        if (!votes) return 'N/A';
+        const numericVotes = parseInt(votes.replace(/,/g, ''), 10);
+        if (numericVotes >= 1000000) {
+            return (numericVotes / 1000000).toFixed(1).replace('.', ',') + ' M';
+        } else if (numericVotes >= 1000) {
+            return (numericVotes / 1000).toFixed(1).replace('.', ',') + ' mil';
+        }
+        return numericVotes.toString();
+    };
 
     return (
         <Container sx={{ px: 0.5 }}>
@@ -119,15 +165,15 @@ const MovieSearch = () => {
             )}
             <Grid container spacing={0.5} mb={2}>
                 {movies.map((movie) => (
-                    <Grid item xs={6} sm={4} md={3} key={movie.id}>
+                    <Grid item xs={6} sm={4} md={3} key={movie.imdbID}>
                         <Card>
-                            <CardActionArea onClick={() => handleExpandClick(movie.id)}>
+                            <CardActionArea onClick={() => handleExpandClick(movie.imdbID)}>
                                 <Box sx={{ position: 'relative', paddingTop: '150%' }}>
-                                    {movie.poster_path && (
+                                    {movie.Poster !== 'N/A' && (
                                         <CardMedia
                                             component="img"
-                                            image={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
-                                            alt={`${movie.title} Poster`}
+                                            image={movie.Poster}
+                                            alt={`${movie.Title} Poster`}
                                             sx={{
                                                 position: 'absolute',
                                                 top: 0,
@@ -140,25 +186,46 @@ const MovieSearch = () => {
                                     )}
                                 </Box>
                                 <CardContent sx={{ padding: 0, paddingTop: 1 }}>
-                                    <Typography variant="h6">{movie.title}</Typography>
+                                    <Typography variant="h6">{movie.Title}</Typography>
                                     <Typography variant="body2" color="textSecondary">
-                                        Rating: {movie.vote_average}
+                                        Año: {movie.Year}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
-                                        ({movie.vote_count} votes)
-                                    </Typography>
-                                    <Typography variant="body2" color="textSecondary">
-                                        Release Date: {movie.release_date}
-                                    </Typography>
+                                    {movie.details && movie.details.imdbRating && (
+                                        <Typography variant="body2" color="textSecondary">
+                                            {movie.details.imdbRating}/10 ({formatVotes(movie.details.imdbVotes)} votos)
+                                        </Typography>
+                                    )}
                                 </CardContent>
                             </CardActionArea>
-                            <Collapse in={expanded[movie.id]} timeout="auto" unmountOnExit>
-                                <CardContent>
-                                    <Typography variant="body2" color="textSecondary">
-                                        {movie.overview}
-                                    </Typography>
-                                </CardContent>
-                            </Collapse>
+                            {movie.details && (
+                                <Collapse in={expanded[movie.imdbID]} timeout="auto" unmountOnExit>
+                                    <CardContent>
+                                        <Typography variant="body2" color="textSecondary">
+                                            {movie.details.Plot}
+                                        </Typography>
+                                        {movie.details.Genre && (
+                                            <Typography variant="body2" color="textSecondary">
+                                                Genre: {movie.details.Genre}
+                                            </Typography>
+                                        )}
+                                        {movie.details.Director && (
+                                            <Typography variant="body2" color="textSecondary">
+                                                Director: {movie.details.Director}
+                                            </Typography>
+                                        )}
+                                        {movie.details.Actors && (
+                                            <Typography variant="body2" color="textSecondary">
+                                                Actors: {movie.details.Actors}
+                                            </Typography>
+                                        )}
+                                        {movie.details.Actors && (
+                                            <Typography variant="body2" color="textSecondary">
+                                                Runtime: {movie.details.Runtime}
+                                            </Typography>
+                                        )}
+                                    </CardContent>
+                                </Collapse>
+                            )}
                             <CardActions>
                                 <Button
                                     fullWidth
