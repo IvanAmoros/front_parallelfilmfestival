@@ -97,7 +97,7 @@ const MoviesToWatch = () => {
       <Typography variant="h4" component="h1" gutterBottom>
         Pendientes de ver
       </Typography>
-      <Grid container spacing={3}>
+      <Grid container spacing={1}>
         {moviesToWatch.map((movie) => (
           <Grid item xs={6} sm={4} md={3} key={movie.id}>
             <Card>

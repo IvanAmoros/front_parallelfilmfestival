@@ -114,7 +114,7 @@ const MovieSearch = () => {
                     Resultados de búsqueda
                 </Typography>
             )}
-            <Grid container spacing={3} mb={2}>
+            <Grid container spacing={1} mb={2}>
                 {movies.map((movie) => (
                     <Grid item xs={6} sm={4} md={3} key={movie.id}>
                         <Card>
