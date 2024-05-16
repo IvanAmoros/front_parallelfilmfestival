@@ -20,13 +20,16 @@ import {
 	Collapse,
 	Box
 } from '@mui/material';
+import { useAuth } from '../AuthContext'; // Import useAuth to check authentication status
 
 const api_url = process.env.REACT_APP_API_URL;
 
 const MoviesToWatch = () => {
+	const { isLoggedIn, user } = useAuth(); // Destructure isLoggedIn and user from useAuth
 	const [moviesToWatch, setMoviesToWatch] = useState([]);
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [snackbarMessage, setSnackbarMessage] = useState('');
+	const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // State to control the severity of the Snackbar
 	const [openDialog, setOpenDialog] = useState(false);
 	const [selectedFilmId, setSelectedFilmId] = useState(null);
 	const [expanded, setExpanded] = useState({});
@@ -45,38 +48,62 @@ const MoviesToWatch = () => {
 	}, []);
 
 	const increaseUpVotes = async (filmId) => {
-		try {
-			const votedMovie = moviesToWatch.find(movie => movie.id === filmId);
-			setSnackbarMessage(`Has votado a: ${votedMovie.tittle}`);
+		if (isLoggedIn) {
+			try {
+				const accessToken = localStorage.getItem('accessToken'); // Get access token from local storage
+				const votedMovie = moviesToWatch.find(movie => movie.id === filmId);
+				setSnackbarMessage(`Has votado a: ${votedMovie.tittle}`);
+				setSnackbarSeverity('success');
+				setSnackbarOpen(true);
+				const updatedMovies = moviesToWatch.map(movie => {
+					if (movie.id === filmId) {
+						return { ...movie, up_votes: movie.up_votes + 1 };
+					}
+					return movie;
+				});
+				setMoviesToWatch(updatedMovies);
+				await axios.post(`${api_url}/film-festival/increase-up-votes/${filmId}/`, {}, {
+					headers: {
+						'Authorization': `Bearer ${accessToken}`
+					}
+				});
+			} catch (error) {
+				console.error('Error increasing up-votes:', error);
+			}
+		} else {
+			setSnackbarMessage('Debe iniciar sesión primero para votar.');
+			setSnackbarSeverity('warning');
 			setSnackbarOpen(true);
-			const updatedMovies = moviesToWatch.map(movie => {
-				if (movie.id === filmId) {
-					return { ...movie, up_votes: movie.up_votes + 1 };
-				}
-				return movie;
-			});
-			setMoviesToWatch(updatedMovies);
-			await axios.post(`${api_url}/film-festival/increase-up-votes/${filmId}/`);
-		} catch (error) {
-			console.error('Error increasing up-votes:', error);
 		}
 	};
 
 	const markAsWatched = async (filmId) => {
-		try {
-			await axios.post(`${api_url}/film-festival/mark-as-watched/${filmId}/`);
-			window.location.reload();
-			const updatedMovies = moviesToWatch.map(movie => {
-				if (movie.id === filmId) {
-					return { ...movie, isWatched: true }; // Assuming you want to track watched status
-				}
-				return movie;
-			});
-			setMoviesToWatch(updatedMovies);
-			setSnackbarMessage(`Has marcado como vista: ${moviesToWatch.find(movie => movie.id === filmId).tittle}`);
+		if (isLoggedIn && user && user.is_superuser) {
+			try {
+				const accessToken = localStorage.getItem('accessToken'); // Get access token from local storage
+				await axios.post(`${api_url}/film-festival/mark-as-watched/${filmId}/`, {}, {
+					headers: {
+						'Authorization': `Bearer ${accessToken}`
+					}
+				});
+				window.location.reload();
+				const updatedMovies = moviesToWatch.map(movie => {
+					if (movie.id === filmId) {
+						return { ...movie, isWatched: true }; // Assuming you want to track watched status
+					}
+					return movie;
+				});
+				setMoviesToWatch(updatedMovies);
+				setSnackbarMessage(`Has marcado como vista: ${moviesToWatch.find(movie => movie.id === filmId).tittle}`);
+				setSnackbarSeverity('success');
+				setSnackbarOpen(true);
+			} catch (error) {
+				console.error('Error marking as watched:', error);
+			}
+		} else {
+			setSnackbarMessage(isLoggedIn ? 'Debe ser superusuario para marcar como vista.' : 'Debe iniciar sesión primero.');
+			setSnackbarSeverity('warning');
 			setSnackbarOpen(true);
-		} catch (error) {
-			console.error('Error marking as watched:', error);
 		}
 	};
 
@@ -93,15 +120,15 @@ const MoviesToWatch = () => {
 	};
 
 	const formatVotes = (votes) => {
-        if (!votes) return 'N/A';
-        const numericVotes = parseInt(votes.replace(/,/g, ''), 10);
-        if (numericVotes >= 1000000) {
-            return (numericVotes / 1000000).toFixed(1).replace('.', ',') + ' M';
-        } else if (numericVotes >= 1000) {
-            return (numericVotes / 1000).toFixed(1).replace('.', ',') + ' mil';
-        }
-        return numericVotes.toString();
-    };
+		if (!votes) return 'N/A';
+		const numericVotes = parseInt(votes.replace(/,/g, ''), 10);
+		if (numericVotes >= 1000000) {
+			return (numericVotes / 1000000).toFixed(1).replace('.', ',') + ' M';
+		} else if (numericVotes >= 1000) {
+			return (numericVotes / 1000).toFixed(1).replace('.', ',') + ' mil';
+		}
+		return numericVotes.toString();
+	};
 
 	return (
 		<Container sx={{ px: 0.5 }}>
@@ -176,8 +203,14 @@ const MoviesToWatch = () => {
 											color="primary"
 											fullWidth
 											onClick={() => {
-												setSelectedFilmId(movie.id);
-												setOpenDialog(true);
+												if (isLoggedIn && user && user.is_superuser) {
+													setSelectedFilmId(movie.id);
+													setOpenDialog(true);
+												} else {
+													setSnackbarMessage(isLoggedIn ? 'Debe ser superusuario para marcar como vista.' : 'Debe iniciar sesión primero.');
+													setSnackbarSeverity('warning');
+													setSnackbarOpen(true);
+												}
 											}}
 										>
 											Vista
@@ -195,7 +228,7 @@ const MoviesToWatch = () => {
 				onClose={() => setSnackbarOpen(false)}
 				anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
 			>
-				<Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: '100%' }}>
+				<Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' }}>
 					{snackbarMessage}
 				</Alert>
 			</Snackbar>
