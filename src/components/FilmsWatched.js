@@ -46,9 +46,14 @@ const FilmsWatched = () => {
   }, []);
 
   const handleRating = async (newValue, filmId) => {
+    const accessToken = localStorage.getItem('accessToken');
     try {
       const postData = { stars: newValue };
-      await axios.post(`${api_url}/film-festival/create-rating/${filmId}/`, postData);
+      await axios.post(`${api_url}/film-festival/create-rating/${filmId}/`, postData, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
       const updatedFilms = filmsWatched.map(film => {
         if (film.id === filmId) {
           const newVoteCount = film.ratings.length + 1;
@@ -86,12 +91,12 @@ const FilmsWatched = () => {
     if (!votes) return 'N/A';
     const numericVotes = parseInt(votes.replace(/,/g, ''), 10);
     if (numericVotes >= 1000000) {
-        return (numericVotes / 1000000).toFixed(1).replace('.', ',') + ' M';
+      return (numericVotes / 1000000).toFixed(1).replace('.', ',') + ' M';
     } else if (numericVotes >= 1000) {
-        return (numericVotes / 1000).toFixed(1).replace('.', ',') + ' mil';
+      return (numericVotes / 1000).toFixed(1).replace('.', ',') + ' mil';
     }
     return numericVotes.toString();
-};
+  };
 
   return (
     <Container sx={{ px: 0.5 }}>
@@ -108,13 +113,13 @@ const FilmsWatched = () => {
                     component="img"
                     image={film.image}
                     alt={`${film.tittle} Poster`}
-                    sx={{ 
-                      position: 'absolute', 
-                      top: 0, 
-                      left: 0, 
-                      width: '100%', 
-                      height: '100%', 
-                      objectFit: 'cover' 
+                    sx={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover'
                     }}
                   />
                 </Box>
@@ -141,23 +146,23 @@ const FilmsWatched = () => {
                     {film.description}
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
-										Genre: {film.genre}
-									</Typography>
-									<Typography variant="body2" color="textSecondary">
-										Director: {film.director}
-									</Typography>
-									<Typography variant="body2" color="textSecondary">
-										Actors: {film.actors}
-									</Typography>
-									<Typography variant="body2" color="textSecondary">
-										Year: {film.year}
-									</Typography>
-									<Typography variant="body2" color="textSecondary">
-										Runtime: {film.runtime}
-									</Typography>
-									<Typography variant="body2" color="textSecondary">
-										{film.imdb_rating}/10 ({formatVotes(film.imdb_votes)} votos)
-									</Typography>
+                    Genre: {film.genre}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Director: {film.director}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Actors: {film.actors}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Year: {film.year}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Runtime: {film.runtime}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {film.imdb_rating}/10 ({formatVotes(film.imdb_votes)} votos)
+                  </Typography>
                 </CardContent>
               </Collapse>
               <CardActions sx={{ justifyContent: 'center', padding: 1 }}>

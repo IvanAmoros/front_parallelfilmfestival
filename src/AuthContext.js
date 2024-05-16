@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
@@ -6,27 +7,28 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null); // State to hold user details
+  const [user, setUser] = useState(null);
+  const [accessToken, setAccessToken] = useState(localStorage.getItem('accessToken'));
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     const initializeAuth = async () => {
-      const accessToken = localStorage.getItem('accessToken');
       if (accessToken) {
         try {
-          const apiUrl = process.env.REACT_APP_API_BASE_URL;
-          const response = await fetch(`${apiUrl}base/api/validate_token/`, {
+          const response = await axios.get(`${apiUrl}/base/api/validate_token/`, {
             headers: {
               'Authorization': `Bearer ${accessToken}`,
             },
           });
 
-          if (response.ok) {
-            const data = await response.json();
+          if (response.status === 200) {
+            const data = response.data;
             setIsLoggedIn(true);
-            setUser({ username: data.username }); // Adjust based on actual user details you expect
+            setUser({ username: data.user.username, email: data.user.email, is_superuser: data.user.is_superuser });
           } else {
             console.log('Token validation failed');
-            localStorage.removeItem('accessToken'); // Clear the invalid token
+            localStorage.removeItem('accessToken');
+            setAccessToken(null);
           }
         } catch (error) {
           console.error('Error validating token:', error);
@@ -35,23 +37,20 @@ export const AuthProvider = ({ children }) => {
     };
 
     initializeAuth();
-  }, []);
+  }, [accessToken, apiUrl]);
 
   const login = async (username, password) => {
     try {
-      const apiUrl = process.env.REACT_APP_API_BASE_URL;
-      const response = await fetch(`${apiUrl}base/api/token/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
+      const response = await axios.post(`${apiUrl}/base/api/token/`, { username, password });
 
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) {
+        const data = response.data;
         localStorage.setItem('accessToken', data.access);
         localStorage.setItem('refreshToken', data.refresh);
+        localStorage.setItem('username', data.username);
+        localStorage.setItem('email', data.email);
+        localStorage.setItem('is_superuser', data.is_superuser);
+        setAccessToken(data.access);
         setIsLoggedIn(true);
         setUser({ username: data.username });
       } else {
@@ -67,12 +66,14 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('username');
+    localStorage.removeItem('email');
+    localStorage.removeItem('is_superuser');
     setIsLoggedIn(false);
     setUser(null);
+    setAccessToken(null);
   };
 
-  // Provide the isLoggedIn, user, login, and logout in the context value
-  // This makes them available to any component in your app that uses the useAuth hook
   return (
     <AuthContext.Provider value={{ isLoggedIn, user, login, logout }}>
       {children}
