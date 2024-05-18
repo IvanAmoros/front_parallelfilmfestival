@@ -18,6 +18,11 @@ const FilmFestival = () => {
     setLoginModalOpen(false);
   };
 
+  const handleLogout = () => {
+    logout();
+    window.location.reload(); // Refresh the page to update the UI
+  };
+
   return (
     <Container>
       <Typography variant="h1" component="h1">
@@ -26,7 +31,7 @@ const FilmFestival = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={isLoggedIn ? logout : handleOpenLoginModal}
+        onClick={isLoggedIn ? handleLogout : handleOpenLoginModal}
         sx={{ mb: 2 }}
       >
         {isLoggedIn ? 'Logout' : 'Login'}

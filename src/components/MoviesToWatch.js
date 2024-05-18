@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api'; // Import the custom Axios instance
 import {
 	Container,
 	Grid,
@@ -27,6 +27,7 @@ const api_url = process.env.REACT_APP_API_URL;
 const MoviesToWatch = () => {
 	const { isLoggedIn, user } = useAuth(); // Destructure isLoggedIn and user from useAuth
 	const [moviesToWatch, setMoviesToWatch] = useState([]);
+	const [userUpvotedFilms, setUserUpvotedFilms] = useState(new Set()); // Use a set to store IDs of upvoted films
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [snackbarMessage, setSnackbarMessage] = useState('');
 	const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // State to control the severity of the Snackbar
@@ -37,37 +38,53 @@ const MoviesToWatch = () => {
 	useEffect(() => {
 		const fetchMovies = async () => {
 			try {
-				const response = await axios.get(`${api_url}/film-festival/films-to-watch/`);
+				const response = await api.get(`${api_url}/film-festival/films-to-watch/`);
 				setMoviesToWatch(response.data);
 			} catch (error) {
 				console.error('Error fetching data:', error);
 			}
 		};
 
+		const fetchUserUpvotedFilms = async () => {
+			if (isLoggedIn) {
+				try {
+					const response = await api.get(`${api_url}/film-festival/user-upvoted-films/`, {
+						headers: {
+							'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+						}
+					});
+					const upvotedFilmIds = new Set(response.data.map(film => film.id));
+					setUserUpvotedFilms(upvotedFilmIds);
+				} catch (error) {
+					console.error('Error fetching user upvoted films:', error);
+				}
+			}
+		};
+
 		fetchMovies();
-	}, []);
+		fetchUserUpvotedFilms();
+	}, [isLoggedIn]);
 
 	const increaseUpVotes = async (filmId) => {
 		if (isLoggedIn) {
 			try {
-				const accessToken = localStorage.getItem('accessToken'); // Get access token from local storage
 				const votedMovie = moviesToWatch.find(movie => movie.id === filmId);
 				setSnackbarMessage(`Has votado a: ${votedMovie.tittle}`);
 				setSnackbarSeverity('success');
 				setSnackbarOpen(true);
 				const updatedMovies = moviesToWatch.map(movie => {
 					if (movie.id === filmId) {
-						return { ...movie, up_votes: movie.up_votes + 1 };
+						return { ...movie, total_upvotes: movie.total_upvotes + 1 };
 					}
 					return movie;
 				});
 				setMoviesToWatch(updatedMovies);
-				await axios.post(`${api_url}/film-festival/increase-up-votes/${filmId}/`, {}, {
-					headers: {
-						'Authorization': `Bearer ${accessToken}`
-					}
-				});
+				setUserUpvotedFilms(new Set(userUpvotedFilms).add(filmId)); // Add the film ID to the upvoted films set
+				await api.post(`${api_url}/film-festival/increase-up-votes/${filmId}/`);
 			} catch (error) {
+				setSnackbarMessage('Ha sucedido un error al hacer la petición');
+				setSnackbarSeverity('warning');
+				setSnackbarOpen(true);
 				console.error('Error increasing up-votes:', error);
 			}
 		} else {
@@ -80,12 +97,7 @@ const MoviesToWatch = () => {
 	const markAsWatched = async (filmId) => {
 		if (isLoggedIn && user && user.is_superuser) {
 			try {
-				const accessToken = localStorage.getItem('accessToken'); // Get access token from local storage
-				await axios.post(`${api_url}/film-festival/mark-as-watched/${filmId}/`, {}, {
-					headers: {
-						'Authorization': `Bearer ${accessToken}`
-					}
-				});
+				await api.post(`${api_url}/film-festival/mark-as-watched/${filmId}/`);
 				window.location.reload();
 				const updatedMovies = moviesToWatch.map(movie => {
 					if (movie.id === filmId) {
@@ -157,7 +169,7 @@ const MoviesToWatch = () => {
 								</Box>
 								<CardContent sx={{ padding: 0, paddingTop: 1 }}>
 									<Typography variant="h6">{movie.tittle}</Typography>
-									<Typography variant="subtitle1">Up Votes: {movie.up_votes}</Typography>
+									<Typography variant="subtitle1">Up Votes: {movie.total_upvotes}</Typography>
 								</CardContent>
 							</CardActionArea>
 							<Collapse in={expanded[movie.id]} timeout="auto" unmountOnExit>
@@ -190,9 +202,10 @@ const MoviesToWatch = () => {
 									<Grid item xs={6}>
 										<Button
 											variant="contained"
-											color="primary"
+											color={userUpvotedFilms.has(movie.id) ? 'secondary' : 'primary'}
 											fullWidth
 											onClick={() => increaseUpVotes(movie.id)}
+											disabled={userUpvotedFilms.has(movie.id)}
 										>
 											Votar
 										</Button>

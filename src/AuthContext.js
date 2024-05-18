@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import api from './utils/api'; // Import the custom Axios instance
+import api, { setRefreshTokenGetter } from './utils/api'; // Import the custom Axios instance and the setter function
 
 const AuthContext = createContext();
 
@@ -32,6 +32,8 @@ export const AuthProvider = ({ children }) => {
   }, [refreshToken, apiUrl]);
 
   useEffect(() => {
+    setRefreshTokenGetter(() => refreshToken); // Provide the function to get the latest refresh token
+
     const initializeAuth = async () => {
       if (accessToken) {
         const validateToken = async (token) => {
@@ -84,11 +86,31 @@ export const AuthProvider = ({ children }) => {
         setRefreshToken(data.refresh);
         setIsLoggedIn(true);
         setUser({ username: data.username });
+        return null; // No error
       } else {
         console.error('Login failed.');
+        return 'Login failed'; // Return error message
       }
     } catch (error) {
       console.error('Login error:', error);
+      return error.response?.data || 'Login error'; // Return error details
+    }
+  };
+
+  const register = async (username, email, password) => {
+    try {
+      const response = await api.post(`${apiUrl}/base/api/register/`, { username, email, password });
+
+      if (response.status === 201) { // Assuming 201 Created is returned on successful registration
+        console.log('Registration successful.');
+        return null; // No error
+      } else {
+        console.error('Registration failed.');
+        return 'Registration failed'; // Return error message
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      return error.response?.data || 'Registration error'; // Return error details
     }
   };
 
@@ -102,10 +124,11 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setAccessToken(null);
     setRefreshToken(null);
+    window.location.reload();
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, accessToken, refreshAccessToken }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, register, accessToken, refreshAccessToken }}>
       {children}
     </AuthContext.Provider>
   );

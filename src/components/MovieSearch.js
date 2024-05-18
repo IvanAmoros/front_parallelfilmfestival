@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import api from '../utils/api'; // Import the custom Axios instance
 import {
     Button,
     Container,
@@ -14,17 +14,24 @@ import {
     CardActions,
     CardActionArea,
     Collapse,
-    Box
+    Box,
+    Snackbar,
+    Alert
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { useAuth } from '../AuthContext';
 
 const omdbApiKey = process.env.REACT_APP_OMDB_KEY;
 const api_url = process.env.REACT_APP_API_URL;
 
 const MovieSearch = () => {
+    const { isLoggedIn, accessToken } = useAuth();
     const [query, setQuery] = useState('');
     const [movies, setMovies] = useState([]);
     const [expanded, setExpanded] = useState({});
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
     const searchBoxRef = useRef(null);
     const inputRef = useRef(null);
 
@@ -40,7 +47,7 @@ const MovieSearch = () => {
         };
 
         try {
-            const response = await axios.request(options);
+            const response = await api.request(options);
             if (response.data.Response === 'True') {
                 const initialMovies = response.data.Search;
                 const detailedMoviesPromises = initialMovies.map(movie =>
@@ -48,7 +55,6 @@ const MovieSearch = () => {
                 );
                 const detailedMovies = await Promise.all(detailedMoviesPromises);
 
-                // Merge basic and detailed movie data
                 const mergedMovies = initialMovies.map((movie, index) => {
                     return { ...movie, details: detailedMovies[index] };
                 });
@@ -76,7 +82,7 @@ const MovieSearch = () => {
         };
 
         try {
-            const response = await axios.request(options);
+            const response = await api.request(options);
             return response.data;
         } catch (error) {
             console.error('Error:', error);
@@ -91,6 +97,13 @@ const MovieSearch = () => {
     };
 
     const markAsProposal = async (movie) => {
+        if (!isLoggedIn) {
+            setSnackbarMessage('Debe iniciar sesión primero para proponer una película.');
+            setSnackbarSeverity('warning');
+            setSnackbarOpen(true);
+            return;
+        }
+
         const postData = {
             tittle: movie.Title,
             image: movie.Poster,
@@ -105,10 +118,20 @@ const MovieSearch = () => {
             imdb_id: movie.details ? movie.details.imdbID : null
         };
         try {
-            await axios.post(`${api_url}/film-festival/films-to-watch/`, postData);
+            await api.post(`${api_url}/film-festival/films-to-watch/`, postData, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+            setSnackbarMessage('Propuesta enviada con éxito.');
+            setSnackbarSeverity('success');
+            setSnackbarOpen(true);
             window.location.reload();
         } catch (error) {
             console.error('Error posting data:', error);
+            setSnackbarMessage('Error: La película ya ha sido propuesta.');
+            setSnackbarSeverity('error');
+            setSnackbarOpen(true);
         }
     };
 
@@ -218,7 +241,7 @@ const MovieSearch = () => {
                                                 Actors: {movie.details.Actors}
                                             </Typography>
                                         )}
-                                        {movie.details.Actors && (
+                                        {movie.details.Runtime && (
                                             <Typography variant="body2" color="textSecondary">
                                                 Runtime: {movie.details.Runtime}
                                             </Typography>
@@ -240,6 +263,16 @@ const MovieSearch = () => {
                     </Grid>
                 ))}
             </Grid>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={() => setSnackbarOpen(false)}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </Container>
     );
 };
