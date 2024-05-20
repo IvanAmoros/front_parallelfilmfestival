@@ -62,6 +62,9 @@ const MovieSearch = () => {
                 setMovies(mergedMovies);
             } else {
                 setMovies([]);
+                setSnackbarMessage(`No se ha obtenido ningún resultado con "${query}"`);
+                setSnackbarSeverity('warning');
+                setSnackbarOpen(true);
             }
             inputRef.current.blur();
         } catch (error) {
