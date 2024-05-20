@@ -1,0 +1,53 @@
+/* General styles for the project display area */
+.projects-display {
+    background-color: #526D82;
+}
+
+/* Styles for individual project cards */
+.project-card-container {
+    position: relative;
+    overflow: hidden; /* Ensures that nothing extends outside the card */
+    transition: transform 0.3s ease-in-out; /* Smooth transform for hover effect */
+}
+
+/* Styling for images using CardMedia */
+.project-card-container img {
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Hidden details that will show on hover */
+.project-details {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay so text is readable */
+    color: white;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;    /* Updated from 'end' to 'flex-end' */
+    align-items: flex-start;      /* Updated from 'start' to 'flex-start' */
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s linear 0.3s, opacity 0.3s linear;
+}
+
+
+/* Show details when hovering over the card */
+.project-card-container:hover .project-details {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0s;
+}
+
+/* Styling for skill chips */
+.project-skill-chip {
+    margin: 0.2em;
+}
+
+/* Hover effect to slightly enlarge the image */
+.project-card-container:hover img {
+    transform: scale(1.05);
+}
