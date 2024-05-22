@@ -281,13 +281,13 @@ const MovieSearch = () => {
                                                 <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
                                                     Available on:
                                                 </Typography>
-                                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.2 }}>
                                                     {movie.details.providers.map(provider => (
                                                         <img
                                                             key={provider.provider_id}
                                                             src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
                                                             alt={provider.provider_name}
-                                                            style={{ width: 50, height: 50, borderRadius: 10 }}
+                                                            style={{ width: 45, height: 45, borderRadius: 10 }}
                                                         />
                                                     ))}
                                                 </Box>

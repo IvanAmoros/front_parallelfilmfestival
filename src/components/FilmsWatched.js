@@ -237,13 +237,13 @@ const FilmsWatched = () => {
                                             <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
                                                 Available on:
                                             </Typography>
-                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.2 }}>
                                                 {film.providers.map(provider => (
                                                     <img
                                                         key={provider.id}
                                                         src={provider.image_url}
                                                         alt={provider.name}
-                                                        style={{ width: 50, height: 50, borderRadius: 10 }}
+                                                        style={{ width: 45, height: 45, borderRadius: 10 }}
                                                     />
                                                 ))}
                                             </Box>
