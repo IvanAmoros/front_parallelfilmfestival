@@ -226,26 +226,26 @@ const MovieSearch = () => {
                             {movie.details && (
                                 <Collapse in={expanded[movie.imdbID]} timeout="auto" unmountOnExit>
                                     <CardContent>
-                                        <Typography variant="body2" color="textSecondary">
+                                        <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'justify', mb: 1 }}>
                                             {movie.details.Plot}
                                         </Typography>
                                         {movie.details.Genre && (
-                                            <Typography variant="body2" color="textSecondary">
+                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left' }}>
                                                 Genre: {movie.details.Genre}
                                             </Typography>
                                         )}
                                         {movie.details.Director && (
-                                            <Typography variant="body2" color="textSecondary">
+                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left' }}>
                                                 Director: {movie.details.Director}
                                             </Typography>
                                         )}
                                         {movie.details.Actors && (
-                                            <Typography variant="body2" color="textSecondary">
+                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left' }}>
                                                 Actors: {movie.details.Actors}
                                             </Typography>
                                         )}
                                         {movie.details.Runtime && (
-                                            <Typography variant="body2" color="textSecondary">
+                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left' }}>
                                                 Runtime: {movie.details.Runtime}
                                             </Typography>
                                         )}
