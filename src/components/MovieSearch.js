@@ -22,6 +22,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useAuth } from '../AuthContext';
 
 const omdbApiKey = process.env.REACT_APP_OMDB_KEY;
+const tmdbApiKey = process.env.REACT_APP_TMDB_KEY;
 const api_url = process.env.REACT_APP_API_URL;
 
 const MovieSearch = () => {
@@ -86,10 +87,29 @@ const MovieSearch = () => {
 
         try {
             const response = await api.request(options);
-            return response.data;
+            const movieDetails = response.data;
+            const providers = await getStreamingProviders(imdbID);
+            return { ...movieDetails, providers };
         } catch (error) {
             console.error('Error:', error);
             return null;
+        }
+    };
+
+    const getStreamingProviders = async (imdbID) => {
+        const tmdbOptions = {
+            method: 'GET',
+            url: `https://api.themoviedb.org/3/movie/${imdbID}/watch/providers`,
+            params: {
+                api_key: tmdbApiKey,
+            }
+        };
+
+        try {
+            const response = await api.request(tmdbOptions);
+            return response.data.results?.ES?.flatrate || [];
+        } catch (error) {
+            return [];
         }
     };
 
@@ -107,6 +127,11 @@ const MovieSearch = () => {
             return;
         }
 
+        const providers = movie.details.providers.map(provider => ({
+            name: provider.provider_name,
+            image_url: `https://image.tmdb.org/t/p/original${provider.logo_path}`
+        }));
+
         const postData = {
             tittle: movie.Title,
             image: movie.Poster,
@@ -118,8 +143,10 @@ const MovieSearch = () => {
             actors: movie.details ? movie.details.Actors : null,
             imdb_rating: movie.details ? movie.details.imdbRating : null,
             imdb_votes: movie.details ? movie.details.imdbVotes : null,
-            imdb_id: movie.details ? movie.details.imdbID : null
+            imdb_id: movie.details ? movie.details.imdbID : null,
+            providers: providers
         };
+
         try {
             await api.post(`${api_url}/film-festival/films-to-watch/`, postData, {
                 headers: {
@@ -248,6 +275,23 @@ const MovieSearch = () => {
                                             <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left' }}>
                                                 Runtime: {movie.details.Runtime}
                                             </Typography>
+                                        )}
+                                        {movie.details.providers && movie.details.providers.length > 0 && (
+                                            <Box sx={{ mt: 2 }}>
+                                                <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
+                                                    Available on:
+                                                </Typography>
+                                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                                                    {movie.details.providers.map(provider => (
+                                                        <img
+                                                            key={provider.provider_id}
+                                                            src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
+                                                            alt={provider.provider_name}
+                                                            style={{ width: 50, height: 50, borderRadius: 10 }}
+                                                        />
+                                                    ))}
+                                                </Box>
+                                            </Box>
                                         )}
                                     </CardContent>
                                 </Collapse>
