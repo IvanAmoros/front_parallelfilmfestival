@@ -174,51 +174,68 @@ const MoviesToWatch = () => {
 							</CardActionArea>
 							<Collapse in={expanded[movie.id]} timeout="auto" unmountOnExit>
 								<CardContent>
-								<Typography
-                                        variant="body2"
-                                        color="textSecondary"
-                                        sx={{ textAlign: 'justify', mb: 1 }}
-                                    >
-                                        {movie.description}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        color="textSecondary"
-                                        sx={{ textAlign: 'left' }}
-                                    >
-                                        Genre: {movie.genre}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        color="textSecondary"
-                                        sx={{ textAlign: 'left' }}
-                                    >
-                                        Director: {movie.director}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        color="textSecondary"
-                                        sx={{ textAlign: 'left' }}
-                                    >
-                                        Actors: {movie.actors}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        color="textSecondary"
-                                        sx={{ textAlign: 'left' }}
-                                    >
-                                        Year: {movie.year}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        color="textSecondary"
-                                        sx={{ textAlign: 'left' }}
-                                    >
-                                        Runtime: {movie.runtime}
-                                    </Typography>
-                                    <Typography variant="body2" color="textSecondary">
-                                        {movie.imdb_rating}/10 ({formatVotes(movie.imdb_votes)} votos)
-                                    </Typography>
+									<Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left' }}>
+										Votos:
+									</Typography>
+									{movie.upvotes && (
+										<Box sx={{ mb: 1 }}>
+											{movie.upvotes.map((upvote) => (
+												<Typography
+													key={upvote.id}
+													variant="body2"
+													color="textSecondary"
+													sx={{ textAlign: 'left' }}
+												>
+													{upvote.user}
+												</Typography>
+											))}
+										</Box>
+									)}
+									<Typography
+										variant="body2"
+										color="textSecondary"
+										sx={{ textAlign: 'justify', mb: 1 }}
+									>
+										{movie.description}
+									</Typography>
+									<Typography
+										variant="body2"
+										color="textSecondary"
+										sx={{ textAlign: 'left' }}
+									>
+										Genre: {movie.genre}
+									</Typography>
+									<Typography
+										variant="body2"
+										color="textSecondary"
+										sx={{ textAlign: 'left' }}
+									>
+										Director: {movie.director}
+									</Typography>
+									<Typography
+										variant="body2"
+										color="textSecondary"
+										sx={{ textAlign: 'left' }}
+									>
+										Actors: {movie.actors}
+									</Typography>
+									<Typography
+										variant="body2"
+										color="textSecondary"
+										sx={{ textAlign: 'left' }}
+									>
+										Year: {movie.year}
+									</Typography>
+									<Typography
+										variant="body2"
+										color="textSecondary"
+										sx={{ textAlign: 'left' }}
+									>
+										Runtime: {movie.runtime}
+									</Typography>
+									<Typography variant="body2" color="textSecondary">
+										{movie.imdb_rating}/10 ({formatVotes(movie.imdb_votes)} votos)
+									</Typography>
 								</CardContent>
 							</Collapse>
 							<CardActions>
