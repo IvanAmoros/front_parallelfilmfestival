@@ -20,12 +20,16 @@ const FilmFestival = () => {
 
   const handleLogout = () => {
     logout();
-    window.location.reload(); // Refresh the page to update the UI
+    window.location.reload();
   };
 
   return (
     <Container>
-      <Typography variant="h1" component="h1">
+      <Typography 
+        variant="h1" 
+        component="h1" 
+        sx={{ fontFamily: 'Lobster, cursive' }}
+      >
         Paral·lel Film Festival
       </Typography>
       <Button
