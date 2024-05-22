@@ -243,7 +243,7 @@ const FilmsWatched = () => {
                                                         key={provider.id}
                                                         src={provider.image_url}
                                                         alt={provider.name}
-                                                        style={{ width: 45, height: 45, borderRadius: 10 }}
+                                                        style={{ width: 48, height: 48, borderRadius: 10 }}
                                                     />
                                                 ))}
                                             </Box>

@@ -233,7 +233,11 @@ const MoviesToWatch = () => {
 									>
 										Runtime: {movie.runtime}
 									</Typography>
-									<Typography variant="body2" color="textSecondary">
+									<Typography
+										variant="body2"
+										color="textSecondary"
+										sx={{ textAlign: 'left' }}
+									>
 										{movie.imdb_rating}/10 ({formatVotes(movie.imdb_votes)} votos)
 									</Typography>
 									{movie.providers && movie.providers.length > 0 && (
@@ -247,7 +251,7 @@ const MoviesToWatch = () => {
 														key={provider.id}
 														src={provider.image_url}
 														alt={provider.name}
-														style={{ width: 45, height: 45, borderRadius: 10 }}
+														style={{ width: 48, height: 48, borderRadius: 10 }}
 													/>
 												))}
 											</Box>
