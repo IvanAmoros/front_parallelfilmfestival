@@ -2,9 +2,8 @@ import axios from 'axios';
 
 const api = axios.create();
 
-let getRefreshToken; // Declare a variable to hold the function to get the refresh token
+let getRefreshToken;
 
-// Function to set the getRefreshToken function
 export const setRefreshTokenGetter = (getter) => {
   getRefreshToken = getter;
 };
@@ -19,7 +18,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const refreshToken = getRefreshToken(); // Use the function to get the refresh token
+        const refreshToken = getRefreshToken();
         if (refreshToken) {
           const response = await axios.post(`${apiUrl}/base/api/token/refresh/`, { refresh: refreshToken });
 
