@@ -24,7 +24,7 @@ const FilmFestival = () => {
   };
 
   return (
-    <Container>
+    <Container sx={{ px: 0 }}>
       <Typography 
         variant="h1" 
         component="h1" 
