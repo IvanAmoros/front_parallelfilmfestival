@@ -78,7 +78,7 @@ const FilmsWatched = () => {
             const updatedFilms = filmsWatched.map(film => {
                 if (film.id === filmId) {
                     const newVoteCount = film.ratings.length + 1;
-                    const newRatings = [...film.ratings, { stars: newValue }];
+                    const newRatings = [...film.ratings, { stars: newValue, user: 'current_user' }]; // Replace 'current_user' with the actual username if available
                     const newAverage = newRatings.reduce((acc, curr) => acc + curr.stars, 0) / newRatings.length;
                     return { ...film, average_rating: newAverage, ratings: newRatings, vote_count: newVoteCount };
                 }
@@ -98,8 +98,8 @@ const FilmsWatched = () => {
         }
     };
 
-    const handleExpandClick = (movieId) => {
-        setExpanded(prevState => ({ ...prevState, [movieId]: !prevState[movieId] }));
+    const handleExpandClick = (filmId) => {
+        setExpanded(prevState => ({ ...prevState, [filmId]: !prevState[filmId] }));
     };
 
     const openRatingModal = (film) => {
@@ -131,7 +131,7 @@ const FilmsWatched = () => {
     };
 
     return (
-        <Container sx={{ px: 0.5 }}>
+        <Container sx={{ px: 0.5, mb: 5 }}>
             <Typography variant="h4" component="h1" gutterBottom>
                 Ya vistas
             </Typography>
@@ -170,26 +170,63 @@ const FilmsWatched = () => {
                             </CardActionArea>
                             <Collapse in={expanded[film.id]} timeout="auto" unmountOnExit>
                                 <CardContent>
-                                    <Typography variant="h6">{film.tittle}</Typography>
                                     <Typography variant="subtitle1">
                                         Vista: {film.watched_date}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    {film.ratings && (
+                                        <Box sx={{ mb: 1 }}>
+                                            {film.ratings.map((rating) => (
+                                                <Typography
+                                                    key={rating.id}
+                                                    variant="body2"
+                                                    color="textSecondary"
+                                                    sx={{ textAlign: 'left' }}
+                                                >
+                                                    {rating.user}: {rating.stars}/10
+                                                </Typography>
+                                            ))}
+                                        </Box>
+                                    )}
+                                    <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        sx={{ textAlign: 'justify', mb: 1 }}
+                                    >
                                         {film.description}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        sx={{ textAlign: 'left' }}
+                                    >
                                         Genre: {film.genre}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        sx={{ textAlign: 'left' }}
+                                    >
                                         Director: {film.director}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        sx={{ textAlign: 'left' }}
+                                    >
                                         Actors: {film.actors}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        sx={{ textAlign: 'left' }}
+                                    >
                                         Year: {film.year}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        sx={{ textAlign: 'left' }}
+                                    >
                                         Runtime: {film.runtime}
                                     </Typography>
                                     <Typography variant="body2" color="textSecondary">
