@@ -78,7 +78,7 @@ const FilmsWatched = () => {
             const updatedFilms = filmsWatched.map(film => {
                 if (film.id === filmId) {
                     const newVoteCount = film.ratings.length + 1;
-                    const newRatings = [...film.ratings, { stars: newValue, user: 'current_user' }]; // Replace 'current_user' with the actual username if available
+                    const newRatings = [...film.ratings, { stars: newValue, user: 'current_user' }];
                     const newAverage = newRatings.reduce((acc, curr) => acc + curr.stars, 0) / newRatings.length;
                     return { ...film, average_rating: newAverage, ratings: newRatings, vote_count: newVoteCount };
                 }
@@ -232,6 +232,23 @@ const FilmsWatched = () => {
                                     <Typography variant="body2" color="textSecondary">
                                         {film.imdb_rating}/10 ({formatVotes(film.imdb_votes)} votos)
                                     </Typography>
+                                    {film.providers && film.providers.length > 0 && (
+                                        <Box sx={{ mt: 2 }}>
+                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
+                                                Available on:
+                                            </Typography>
+                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                                                {film.providers.map(provider => (
+                                                    <img
+                                                        key={provider.id}
+                                                        src={provider.image_url}
+                                                        alt={provider.name}
+                                                        style={{ width: 50, height: 50, borderRadius: 10 }}
+                                                    />
+                                                ))}
+                                            </Box>
+                                        </Box>
+                                    )}
                                 </CardContent>
                             </Collapse>
                             <CardActions sx={{ justifyContent: 'center', padding: 1 }}>

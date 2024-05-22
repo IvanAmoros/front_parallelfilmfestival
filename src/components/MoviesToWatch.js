@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../utils/api'; // Import the custom Axios instance
+import api from '../utils/api';
 import {
 	Container,
 	Grid,
@@ -20,17 +20,17 @@ import {
 	Collapse,
 	Box
 } from '@mui/material';
-import { useAuth } from '../AuthContext'; // Import useAuth to check authentication status
+import { useAuth } from '../AuthContext';
 
 const api_url = process.env.REACT_APP_API_URL;
 
 const MoviesToWatch = () => {
-	const { isLoggedIn, user } = useAuth(); // Destructure isLoggedIn and user from useAuth
+	const { isLoggedIn, user } = useAuth();
 	const [moviesToWatch, setMoviesToWatch] = useState([]);
-	const [userUpvotedFilms, setUserUpvotedFilms] = useState(new Set()); // Use a set to store IDs of upvoted films
+	const [userUpvotedFilms, setUserUpvotedFilms] = useState(new Set());
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [snackbarMessage, setSnackbarMessage] = useState('');
-	const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // State to control the severity of the Snackbar
+	const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 	const [openDialog, setOpenDialog] = useState(false);
 	const [selectedFilmId, setSelectedFilmId] = useState(null);
 	const [expanded, setExpanded] = useState({});
@@ -79,7 +79,7 @@ const MoviesToWatch = () => {
 					return movie;
 				});
 				setMoviesToWatch(updatedMovies);
-				setUserUpvotedFilms(new Set(userUpvotedFilms).add(filmId)); // Add the film ID to the upvoted films set
+				setUserUpvotedFilms(new Set(userUpvotedFilms).add(filmId));
 				await api.post(`${api_url}/film-festival/increase-up-votes/${filmId}/`);
 			} catch (error) {
 				setSnackbarMessage('Ha sucedido un error al hacer la petición');
@@ -101,7 +101,7 @@ const MoviesToWatch = () => {
 				window.location.reload();
 				const updatedMovies = moviesToWatch.map(movie => {
 					if (movie.id === filmId) {
-						return { ...movie, isWatched: true }; // Assuming you want to track watched status
+						return { ...movie, isWatched: true };
 					}
 					return movie;
 				});
@@ -236,6 +236,23 @@ const MoviesToWatch = () => {
 									<Typography variant="body2" color="textSecondary">
 										{movie.imdb_rating}/10 ({formatVotes(movie.imdb_votes)} votos)
 									</Typography>
+									{movie.providers && movie.providers.length > 0 && (
+										<Box sx={{ mt: 2 }}>
+											<Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
+												Available on:
+											</Typography>
+											<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+												{movie.providers.map(provider => (
+													<img
+														key={provider.id}
+														src={provider.image_url}
+														alt={provider.name}
+														style={{ width: 50, height: 50, borderRadius: 10 }}
+													/>
+												))}
+											</Box>
+										</Box>
+									)}
 								</CardContent>
 							</Collapse>
 							<CardActions>
