@@ -287,7 +287,7 @@ const MovieSearch = () => {
                                                             key={provider.provider_id}
                                                             src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
                                                             alt={provider.provider_name}
-                                                            style={{ width: 45, height: 45, borderRadius: 10 }}
+                                                            style={{ width: 48, height: 48, borderRadius: 10 }}
                                                         />
                                                     ))}
                                                 </Box>
