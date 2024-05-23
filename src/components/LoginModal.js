@@ -69,6 +69,7 @@ const LoginModal = ({ open, onClose }) => {
             onKeyDown={handleKeyPress}
             fullWidth
             margin="dense"
+            required
           />
         )}
         <TextField
