@@ -138,7 +138,7 @@ const MovieSearch = () => {
             description: movie.details ? movie.details.Plot : null,
             year: movie.details ? movie.details.Year : null,
             runtime: movie.details ? movie.details.Runtime : null,
-            genre: movie.details ? movie.details.Genre : null,
+            genres: movie.details ? handleGenres(movie.details.Genre) : null,
             director: movie.details ? movie.details.Director : null,
             actors: movie.details ? movie.details.Actors : null,
             imdb_rating: movie.details ? movie.details.imdbRating : null,
@@ -164,6 +164,10 @@ const MovieSearch = () => {
             setSnackbarOpen(true);
         }
     };
+
+    const handleGenres = (genre) => {
+        return genre.split(',').map(g => g.trim());
+    }
 
     const handleExpandClick = (movieId) => {
         setExpanded(prevState => ({ ...prevState, [movieId]: !prevState[movieId] }));

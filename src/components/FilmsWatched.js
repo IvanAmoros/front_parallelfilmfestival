@@ -130,6 +130,11 @@ const FilmsWatched = () => {
         return numericVotes.toString();
     };
 
+    const formatGenres = (genres) => {
+        if (!genres || genres.length === 0) return 'N/A';
+        return genres.map(g => g.name).join(', ');
+    };
+
     return (
         <Container sx={{ px: 0.5, mb: 5 }}>
             <Typography variant="h4" component="h1" gutterBottom>
@@ -199,7 +204,7 @@ const FilmsWatched = () => {
                                         color="textSecondary"
                                         sx={{ textAlign: 'left' }}
                                     >
-                                        Genre: {film.genre}
+                                        Genre: {formatGenres(film.genres)}
                                     </Typography>
                                     <Typography
                                         variant="body2"
