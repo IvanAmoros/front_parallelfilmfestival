@@ -20,22 +20,25 @@ const LoginModal = ({ open, onClose }) => {
   };
 
   const handleRegister = async () => {
+    if (!username) {
+      setError('Username is required');
+      return;
+    }
+    if (!email) {
+      setError('Email is required');
+      return;
+    }
+    if (!password) {
+      setError('Password is required');
+      return;
+    }
+
     const error = await register(username, email, password);
     if (error) {
       setError(error);
     } else {
       await login(username, password);
       onClose();
-    }
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      if (isRegister) {
-        handleRegister();
-      } else {
-        handleLogin();
-      }
     }
   };
 
@@ -47,11 +50,17 @@ const LoginModal = ({ open, onClose }) => {
     setError('');
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      isRegister ? handleRegister() : handleLogin();
+    }
+  };
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{isRegister ? 'Register' : 'Login'}</DialogTitle>
       <DialogContent>
-        {error && <Alert severity="error">{JSON.stringify(error)}</Alert>}
+        {error && <Alert severity="error">{error}</Alert>}
         <TextField
           label="Username"
           value={username}
@@ -69,7 +78,6 @@ const LoginModal = ({ open, onClose }) => {
             onKeyDown={handleKeyPress}
             fullWidth
             margin="dense"
-            required
           />
         )}
         <TextField
