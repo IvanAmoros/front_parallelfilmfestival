@@ -29,6 +29,16 @@ const LoginModal = ({ open, onClose }) => {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      if (isRegister) {
+        handleRegister();
+      } else {
+        handleLogin();
+      }
+    }
+  };
+
   const toggleMode = () => {
     setIsRegister(!isRegister);
     setUsername('');
@@ -46,6 +56,7 @@ const LoginModal = ({ open, onClose }) => {
           label="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          onKeyDown={handleKeyPress}
           fullWidth
           margin="dense"
         />
@@ -55,6 +66,7 @@ const LoginModal = ({ open, onClose }) => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={handleKeyPress}
             fullWidth
             margin="dense"
           />
@@ -64,6 +76,7 @@ const LoginModal = ({ open, onClose }) => {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={handleKeyPress}
           fullWidth
           margin="dense"
         />
