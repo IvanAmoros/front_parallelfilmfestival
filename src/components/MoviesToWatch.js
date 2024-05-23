@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import api from '../utils/api';
 import {
 	Container,
@@ -18,7 +18,8 @@ import {
 	DialogTitle,
 	CardActionArea,
 	Collapse,
-	Box
+	Box,
+	Chip
 } from '@mui/material';
 import { useAuth } from '../AuthContext';
 
@@ -34,36 +35,59 @@ const MoviesToWatch = () => {
 	const [openDialog, setOpenDialog] = useState(false);
 	const [selectedFilmId, setSelectedFilmId] = useState(null);
 	const [expanded, setExpanded] = useState({});
+	const [genres, setGenres] = useState([]);
+	const [selectedGenres, setSelectedGenres] = useState([]);
+
+	const fetchGenres = useCallback(async () => {
+		try {
+			const response = await api.get(`${api_url}/film-festival/genres/`);
+			setGenres(response.data);
+		} catch (error) {
+			console.error('Error fetching genres:', error);
+		}
+	}, []);
+
+	const fetchMovies = useCallback(async () => {
+		let url = `${api_url}/film-festival/films-to-watch/`;
+		if (selectedGenres.length > 0) {
+			const genreParams = selectedGenres.map(genre => `genres=${genre}`).join('&');
+			url += `?${genreParams}`;
+		}
+		try {
+			const response = await api.get(url);
+			setMoviesToWatch(response.data);
+		} catch (error) {
+			console.error('Error fetching data:', error);
+		}
+	}, [selectedGenres]);
+
+	const fetchUserUpvotedFilms = useCallback(async () => {
+		if (isLoggedIn) {
+			try {
+				const response = await api.get(`${api_url}/film-festival/user-upvoted-films/`, {
+					headers: {
+						'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+					}
+				});
+				const upvotedFilmIds = new Set(response.data.map(film => film.id));
+				setUserUpvotedFilms(upvotedFilmIds);
+			} catch (error) {
+				console.error('Error fetching user upvoted films:', error);
+			}
+		}
+	}, [isLoggedIn]);
 
 	useEffect(() => {
-		const fetchMovies = async () => {
-			try {
-				const response = await api.get(`${api_url}/film-festival/films-to-watch/`);
-				setMoviesToWatch(response.data);
-			} catch (error) {
-				console.error('Error fetching data:', error);
-			}
-		};
+		fetchGenres();
+	}, [fetchGenres]);
 
-		const fetchUserUpvotedFilms = async () => {
-			if (isLoggedIn) {
-				try {
-					const response = await api.get(`${api_url}/film-festival/user-upvoted-films/`, {
-						headers: {
-							'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-						}
-					});
-					const upvotedFilmIds = new Set(response.data.map(film => film.id));
-					setUserUpvotedFilms(upvotedFilmIds);
-				} catch (error) {
-					console.error('Error fetching user upvoted films:', error);
-				}
-			}
-		};
-
+	useEffect(() => {
 		fetchMovies();
+	}, [selectedGenres, fetchMovies]);
+
+	useEffect(() => {
 		fetchUserUpvotedFilms();
-	}, [isLoggedIn]);
+	}, [fetchUserUpvotedFilms]);
 
 	const increaseUpVotes = async (filmId) => {
 		if (isLoggedIn) {
@@ -72,15 +96,9 @@ const MoviesToWatch = () => {
 				setSnackbarMessage(`Has votado a: ${votedMovie.tittle}`);
 				setSnackbarSeverity('success');
 				setSnackbarOpen(true);
-				const updatedMovies = moviesToWatch.map(movie => {
-					if (movie.id === filmId) {
-						return { ...movie, total_upvotes: movie.total_upvotes + 1 };
-					}
-					return movie;
-				});
-				setMoviesToWatch(updatedMovies);
-				setUserUpvotedFilms(new Set(userUpvotedFilms).add(filmId));
 				await api.post(`${api_url}/film-festival/increase-up-votes/${filmId}/`);
+				await fetchMovies();  // Fetch the updated movies data
+				await fetchUserUpvotedFilms();  // Fetch the updated upvoted films
 			} catch (error) {
 				setSnackbarMessage('Ha sucedido un error al hacer la petición');
 				setSnackbarSeverity('warning');
@@ -147,11 +165,40 @@ const MoviesToWatch = () => {
 		return genres.map(g => g.name).join(', ');
 	};
 
+	const handleGenreClick = (genre) => {
+		setSelectedGenres(prevSelectedGenres => {
+			if (prevSelectedGenres.includes(genre)) {
+				return prevSelectedGenres.filter(g => g !== genre);
+			} else {
+				return [...prevSelectedGenres, genre];
+			}
+		});
+	};
+
 	return (
 		<Container sx={{ px: 0.5, mb: 5 }}>
 			<Typography variant="h4" component="h1" gutterBottom>
 				Pendientes de ver
 			</Typography>
+			<Box sx={{ mb: 2 }}>
+				{genres.map((genre) => (
+					<Chip
+						key={genre.id}
+						label={genre.name}
+						onClick={() => handleGenreClick(genre.name)}
+						color={selectedGenres.includes(genre.name) ? 'primary' : 'default'}
+						sx={{
+							mr: 1,
+							mb: 1,
+							color: selectedGenres.includes(genre.name) ? 'white' : 'black',
+							backgroundColor: selectedGenres.includes(genre.name) ? 'rgb(25, 118, 210)' : 'lightgray',
+							'&:hover': {
+								backgroundColor: selectedGenres.includes(genre.name) ? 'darkblue' : 'gray'
+							}
+						}}
+					/>
+				))}
+			</Box>
 			<Grid container spacing={0.5} padding={0}>
 				{moviesToWatch.map((movie) => (
 					<Grid item xs={6} sm={4} md={3} key={movie.id}>
