@@ -192,9 +192,6 @@ const MoviesToWatch = () => {
 							mb: 1,
 							color: selectedGenres.includes(genre.name) ? 'white' : 'black',
 							backgroundColor: selectedGenres.includes(genre.name) ? 'rgb(25, 118, 210)' : 'lightgray',
-							'&:hover': {
-								backgroundColor: selectedGenres.includes(genre.name) ? 'darkblue' : 'gray'
-							}
 						}}
 					/>
 				))}
