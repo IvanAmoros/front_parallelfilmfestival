@@ -86,6 +86,7 @@ const FilmsWatched = () => {
             });
             setFilmsWatched(updatedFilms);
             setUserRatedFilms(new Set(userRatedFilms).add(filmId));
+            setRating(0);
             setSnackbarMessage(`Has votado con un ${newValue}`);
             setSnackbarSeverity('success');
             setSnackbarOpen(true);
