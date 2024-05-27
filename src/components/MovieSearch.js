@@ -261,27 +261,27 @@ const MovieSearch = () => {
                                             {movie.details.Plot}
                                         </Typography>
                                         {movie.details.Genre && (
-                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left' }}>
+                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
                                                 Genre: {movie.details.Genre}
                                             </Typography>
                                         )}
                                         {movie.details.Director && (
-                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left' }}>
+                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
                                                 Director: {movie.details.Director}
                                             </Typography>
                                         )}
                                         {movie.details.Actors && (
-                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left' }}>
+                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
                                                 Actors: {movie.details.Actors}
                                             </Typography>
                                         )}
                                         {movie.details.Runtime && (
-                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left' }}>
+                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
                                                 Runtime: {movie.details.Runtime}
                                             </Typography>
                                         )}
                                         {movie.details.providers && movie.details.providers.length > 0 && (
-                                            <Box sx={{ mt: 2 }}>
+                                            <Box>
                                                 <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
                                                     Available on:
                                                 </Typography>
