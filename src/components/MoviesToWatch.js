@@ -250,47 +250,47 @@ const MoviesToWatch = () => {
 									<Typography
 										variant="body2"
 										color="textSecondary"
-										sx={{ textAlign: 'left' }}
+										sx={{ textAlign: 'left', mb: 1 }}
 									>
 										Genre: {formatGenres(movie.genres)}
 									</Typography>
 									<Typography
 										variant="body2"
 										color="textSecondary"
-										sx={{ textAlign: 'left' }}
+										sx={{ textAlign: 'left', mb: 1 }}
 									>
 										Director: {movie.director}
 									</Typography>
 									<Typography
 										variant="body2"
 										color="textSecondary"
-										sx={{ textAlign: 'left' }}
+										sx={{ textAlign: 'left', mb: 1 }}
 									>
 										Actors: {movie.actors}
 									</Typography>
 									<Typography
 										variant="body2"
 										color="textSecondary"
-										sx={{ textAlign: 'left' }}
+										sx={{ textAlign: 'left', mb: 1 }}
 									>
 										Year: {movie.year}
 									</Typography>
 									<Typography
 										variant="body2"
 										color="textSecondary"
-										sx={{ textAlign: 'left' }}
+										sx={{ textAlign: 'left', mb: 1 }}
 									>
 										Runtime: {movie.runtime}
 									</Typography>
 									<Typography
 										variant="body2"
 										color="textSecondary"
-										sx={{ textAlign: 'left' }}
+										sx={{ textAlign: 'left', mb: 1 }}
 									>
-										{movie.imdb_rating}/10 ({formatVotes(movie.imdb_votes)} votos)
+										IMDb: {movie.imdb_rating}/10 ({formatVotes(movie.imdb_votes)} votos)
 									</Typography>
 									{movie.providers && movie.providers.length > 0 && (
-										<Box sx={{ mt: 2 }}>
+										<Box>
 											<Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
 												Available on:
 											</Typography>
