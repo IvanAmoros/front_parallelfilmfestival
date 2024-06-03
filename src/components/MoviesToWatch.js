@@ -390,25 +390,27 @@ const MoviesToWatch = () => {
 											</Button>
 										)}
 									</Grid>
-									<Grid item xs={6}>
-										<Button
-											variant="contained"
-											color="primary"
-											fullWidth
-											onClick={() => {
-												if (isLoggedIn && user && user.is_superuser) {
-													setSelectedFilmId(movie.id);
-													setOpenDialog(true);
-												} else {
-													setSnackbarMessage(isLoggedIn ? 'Debe ser superusuario para marcar como vista.' : 'Debe iniciar sesión primero.');
-													setSnackbarSeverity('warning');
-													setSnackbarOpen(true);
-												}
-											}}
-										>
-											Vista
-										</Button>
-									</Grid>
+									{user && user.is_superuser && (
+										<Grid item xs={6}>
+											<Button
+												variant="contained"
+												color="primary"
+												fullWidth
+												onClick={() => {
+													if (isLoggedIn && user && user.is_superuser) {
+														setSelectedFilmId(movie.id);
+														setOpenDialog(true);
+													} else {
+														setSnackbarMessage(isLoggedIn ? 'Debe ser superusuario para marcar como vista.' : 'Debe iniciar sesión primero.');
+														setSnackbarSeverity('warning');
+														setSnackbarOpen(true);
+													}
+												}}
+											>
+												Vista
+											</Button>
+										</Grid>
+									)}
 								</Grid>
 							</CardActions>
 						</Card>
