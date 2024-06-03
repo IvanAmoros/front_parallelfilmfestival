@@ -34,6 +34,7 @@ const MoviesToWatch = () => {
 	const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 	const [openDialog, setOpenDialog] = useState(false);
 	const [selectedFilmId, setSelectedFilmId] = useState(null);
+	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 	const [expanded, setExpanded] = useState({});
 	const [genres, setGenres] = useState([]);
 	const [selectedGenres, setSelectedGenres] = useState([]);
@@ -109,6 +110,52 @@ const MoviesToWatch = () => {
 			setSnackbarMessage('Debe iniciar sesión primero para votar.');
 			setSnackbarSeverity('warning');
 			setSnackbarOpen(true);
+		}
+	};
+
+	const decreaseUpVotes = async (filmId) => {
+		if (isLoggedIn) {
+			try {
+				const votedMovie = moviesToWatch.find(movie => movie.id === filmId);
+				setSnackbarMessage(`Has retirado tu voto de: ${votedMovie.tittle}`);
+				setSnackbarSeverity('success');
+				setSnackbarOpen(true);
+				await api.delete(`${api_url}/film-festival/delete-vote/${filmId}/`);
+				await fetchMovies();  // Fetch the updated movies data
+				await fetchUserUpvotedFilms();  // Fetch the updated upvoted films
+			} catch (error) {
+				setSnackbarMessage('Ha sucedido un error al hacer la petición');
+				setSnackbarSeverity('warning');
+				setSnackbarOpen(true);
+				console.error('Error decreasing up-votes:', error);
+			}
+		} else {
+			setSnackbarMessage('Debe iniciar sesión primero para retirar el voto.');
+			setSnackbarSeverity('warning');
+			setSnackbarOpen(true);
+		}
+	};
+
+	const deleteMovie = async () => {
+		if (isLoggedIn && user) {
+			try {
+				await api.delete(`${api_url}/film-festival/delete-film/${selectedFilmId}/`, {
+					headers: {
+						'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+					}
+				});
+				setSnackbarMessage('Película eliminada con éxito.');
+				setSnackbarSeverity('success');
+				setSnackbarOpen(true);
+				await fetchMovies();  // Refresh the movies list
+				setOpenDeleteDialog(false);
+				setSelectedFilmId(null);
+			} catch (error) {
+				setSnackbarMessage('Error al eliminar la película.');
+				setSnackbarSeverity('warning');
+				setSnackbarOpen(true);
+				console.error('Error deleting movie:', error);
+			}
 		}
 	};
 
@@ -311,15 +358,37 @@ const MoviesToWatch = () => {
 							<CardActions>
 								<Grid container spacing={1}>
 									<Grid item xs={6}>
-										<Button
-											variant="contained"
-											color={userUpvotedFilms.has(movie.id) ? 'secondary' : 'primary'}
-											fullWidth
-											onClick={() => increaseUpVotes(movie.id)}
-											disabled={userUpvotedFilms.has(movie.id)}
-										>
-											Votar
-										</Button>
+										{movie.proposed_by === user?.username ? (
+											<Button
+												variant="contained"
+												color="secondary"
+												fullWidth
+												onClick={() => {
+													setSelectedFilmId(movie.id);
+													setOpenDeleteDialog(true);
+												}}
+											>
+												Eliminar
+											</Button>
+										) : userUpvotedFilms.has(movie.id) ? (
+											<Button
+												variant="contained"
+												color="warning"
+												fullWidth
+												onClick={() => decreaseUpVotes(movie.id)}
+											>
+												Unvote
+											</Button>
+										) : (
+											<Button
+												variant="contained"
+												color="primary"
+												fullWidth
+												onClick={() => increaseUpVotes(movie.id)}
+											>
+												Votar
+											</Button>
+										)}
 									</Grid>
 									<Grid item xs={6}>
 										<Button
@@ -373,6 +442,27 @@ const MoviesToWatch = () => {
 						No
 					</Button>
 					<Button onClick={() => confirmWatched()} color="primary" autoFocus>
+						Si
+					</Button>
+				</DialogActions>
+			</Dialog>
+			<Dialog
+				open={openDeleteDialog}
+				onClose={() => setOpenDeleteDialog(false)}
+				aria-labelledby="alert-delete-dialog-title"
+				aria-describedby="alert-delete-dialog-description"
+			>
+				<DialogTitle id="alert-delete-dialog-title">{"Confirma la eliminación"}</DialogTitle>
+				<DialogContent>
+					<DialogContentText id="alert-delete-dialog-description">
+						Seguro que quieres eliminar esta pelicula?
+					</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={() => setOpenDeleteDialog(false)} color="primary">
+						No
+					</Button>
+					<Button onClick={() => deleteMovie()} color="primary" autoFocus>
 						Si
 					</Button>
 				</DialogActions>
