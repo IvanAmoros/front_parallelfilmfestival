@@ -22,9 +22,9 @@ import {
 	Chip
 } from '@mui/material';
 import { useAuth } from '../AuthContext';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const api_url = process.env.REACT_APP_API_URL;
@@ -381,7 +381,7 @@ const MoviesToWatch = () => {
 												fullWidth
 												onClick={() => decreaseUpVotes(movie.id)}
 											>
-												<HeartBrokenIcon/>
+												<ThumbDownIcon/>
 											</Button>
 										) : (
 											<Button
@@ -390,7 +390,7 @@ const MoviesToWatch = () => {
 												fullWidth
 												onClick={() => increaseUpVotes(movie.id)}
 											>
-												<FavoriteIcon/>
+												<ThumbUpIcon/>
 											</Button>
 										)}
 									</Grid>
