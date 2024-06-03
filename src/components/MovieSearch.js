@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import api from '../utils/api'; // Import the custom Axios instance
+import axios from 'axios';
+import api from '../utils/api';
 import {
     Button,
     Container,
@@ -37,18 +38,20 @@ const MovieSearch = () => {
     const inputRef = useRef(null);
 
     const searchMovie = async () => {
+        const trimmedQuery = query.trim(); // Trim the query
+
         const options = {
             method: 'GET',
             url: 'https://www.omdbapi.com/',
             params: {
                 apikey: omdbApiKey,
-                s: query,
+                s: trimmedQuery, // Use the trimmed query
                 type: 'movie',
             }
         };
 
         try {
-            const response = await api.request(options);
+            const response = await axios.request(options); // Use axios directly
             if (response.data.Response === 'True') {
                 const initialMovies = response.data.Search;
                 const detailedMoviesPromises = initialMovies.map(movie =>
@@ -63,7 +66,7 @@ const MovieSearch = () => {
                 setMovies(mergedMovies);
             } else {
                 setMovies([]);
-                setSnackbarMessage(`No se ha obtenido ningún resultado con "${query}"`);
+                setSnackbarMessage(`No se ha obtenido ningún resultado con "${trimmedQuery}"`);
                 setSnackbarSeverity('warning');
                 setSnackbarOpen(true);
             }
@@ -72,6 +75,7 @@ const MovieSearch = () => {
             console.error('Error:', error);
         }
     };
+
 
     const getMovieDetails = async (imdbID) => {
         const options = {
@@ -86,7 +90,7 @@ const MovieSearch = () => {
         };
 
         try {
-            const response = await api.request(options);
+            const response = await axios.request(options); // Use axios directly
             const movieDetails = response.data;
             const providers = await getStreamingProviders(imdbID);
             return { ...movieDetails, providers };
@@ -106,7 +110,7 @@ const MovieSearch = () => {
         };
 
         try {
-            const response = await api.request(tmdbOptions);
+            const response = await axios.request(tmdbOptions); // Use axios directly
             return response.data.results?.ES?.flatrate || [];
         } catch (error) {
             return [];

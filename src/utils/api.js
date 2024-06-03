@@ -8,6 +8,20 @@ export const setRefreshTokenGetter = (getter) => {
   getRefreshToken = getter;
 };
 
+api.interceptors.request.use(
+  (config) => {
+    const apiUrl = process.env.REACT_APP_API_URL;
+    if (config.url.startsWith(apiUrl)) {
+      const token = localStorage.getItem('accessToken');
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
