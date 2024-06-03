@@ -357,7 +357,7 @@ const MoviesToWatch = () => {
 							</Collapse>
 							<CardActions>
 								<Grid container spacing={1}>
-									<Grid item xs={6}>
+									<Grid item xs={user && user.is_superuser ? 6 : 12}>
 										{movie.proposed_by === user?.username ? (
 											<Button
 												variant="contained"
