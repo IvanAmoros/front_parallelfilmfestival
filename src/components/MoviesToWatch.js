@@ -361,7 +361,7 @@ const MoviesToWatch = () => {
 										{movie.proposed_by === user?.username ? (
 											<Button
 												variant="contained"
-												color="secondary"
+												color="error"
 												fullWidth
 												onClick={() => {
 													setSelectedFilmId(movie.id);
@@ -382,7 +382,7 @@ const MoviesToWatch = () => {
 										) : (
 											<Button
 												variant="contained"
-												color="primary"
+												color="success"
 												fullWidth
 												onClick={() => increaseUpVotes(movie.id)}
 											>
