@@ -22,6 +22,10 @@ import {
 	Chip
 } from '@mui/material';
 import { useAuth } from '../AuthContext';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const api_url = process.env.REACT_APP_API_URL;
 
@@ -368,7 +372,7 @@ const MoviesToWatch = () => {
 													setOpenDeleteDialog(true);
 												}}
 											>
-												Eliminar
+												<DeleteForeverIcon/>
 											</Button>
 										) : userUpvotedFilms.has(movie.id) ? (
 											<Button
@@ -377,7 +381,7 @@ const MoviesToWatch = () => {
 												fullWidth
 												onClick={() => decreaseUpVotes(movie.id)}
 											>
-												Unvote
+												<HeartBrokenIcon/>
 											</Button>
 										) : (
 											<Button
@@ -386,7 +390,7 @@ const MoviesToWatch = () => {
 												fullWidth
 												onClick={() => increaseUpVotes(movie.id)}
 											>
-												Votar
+												<FavoriteIcon/>
 											</Button>
 										)}
 									</Grid>
@@ -407,7 +411,7 @@ const MoviesToWatch = () => {
 													}
 												}}
 											>
-												Vista
+												<VisibilityIcon/>
 											</Button>
 										</Grid>
 									)}
