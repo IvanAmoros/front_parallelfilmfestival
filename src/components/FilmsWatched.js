@@ -19,7 +19,8 @@ import {
     DialogContent,
     DialogTitle,
     DialogContentText,
-    Box
+    Box,
+    CircularProgress
 } from '@mui/material';
 import { useAuth } from '../AuthContext';
 
@@ -27,6 +28,7 @@ const api_url = process.env.REACT_APP_API_URL;
 
 const FilmsWatched = () => {
     const { isLoggedIn, accessToken } = useAuth();
+    const [loading, setLoading] = useState(true);
     const [filmsWatched, setFilmsWatched] = useState([]);
     const [userRatedFilms, setUserRatedFilms] = useState(new Set());
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -39,11 +41,14 @@ const FilmsWatched = () => {
 
     useEffect(() => {
         const fetchFilms = async () => {
+            setLoading(true);
             try {
                 const response = await api.get(`${api_url}/film-festival/films-watched/`);
                 setFilmsWatched(response.data);
+                setLoading(false);
             } catch (error) {
                 console.error('Error fetching data:', error);
+                setLoading(false);
             }
         };
 
@@ -141,140 +146,146 @@ const FilmsWatched = () => {
             <Typography variant="h4" component="h1" gutterBottom>
                 Ya vistas
             </Typography>
-            <Grid container spacing={0.5}>
-                {filmsWatched.map((film) => (
-                    <Grid item xs={6} sm={4} md={3} key={film.id}>
-                        <Card>
-                            <CardActionArea onClick={() => handleExpandClick(film.id)}>
-                                <Box sx={{ position: 'relative', paddingTop: '150%' }}>
-                                    <CardMedia
-                                        component="img"
-                                        image={film.image}
-                                        alt={`${film.tittle} Poster`}
-                                        sx={{
-                                            position: 'absolute',
-                                            top: 0,
-                                            left: 0,
-                                            width: '100%',
-                                            height: '100%',
-                                            objectFit: 'cover'
-                                        }}
-                                    />
-                                </Box>
-                                <CardContent sx={{ padding: 0, paddingTop: 1 }}>
-                                    <Typography variant="subtitle1">
-                                        Rating: {film.average_rating.toFixed(2)}/10 ({film.vote_count})
-                                    </Typography>
-                                    <Rating
-                                        name="read-only"
-                                        value={film.average_rating / 2}
-                                        readOnly
-                                        precision={0.1}
-                                        max={5}
-                                    />
-                                </CardContent>
-                            </CardActionArea>
-                            <Collapse in={expanded[film.id]} timeout="auto" unmountOnExit>
-                                <CardContent>
-                                    <Typography variant="subtitle1">
-                                        Vista: {film.watched_date}
-                                    </Typography>
-                                    {film.ratings && (
-                                        <Box sx={{ mb: 1 }}>
-                                            {film.ratings.map((rating) => (
-                                                <Typography
-                                                    key={rating.id}
-                                                    variant="body2"
-                                                    color="textSecondary"
-                                                    sx={{ textAlign: 'left' }}
-                                                >
-                                                    {rating.user}: {rating.stars}/10
-                                                </Typography>
-                                            ))}
-                                        </Box>
-                                    )}
-                                    <Typography
-                                        variant="body2"
-                                        color="textSecondary"
-                                        sx={{ textAlign: 'justify', mb: 1 }}
-                                    >
-                                        {film.description}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        color="textSecondary"
-                                        sx={{ textAlign: 'left', mb: 1 }}
-                                    >
-                                        Genre: {formatGenres(film.genres)}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        color="textSecondary"
-                                        sx={{ textAlign: 'left', mb: 1 }}
-                                    >
-                                        Director: {film.director}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        color="textSecondary"
-                                        sx={{ textAlign: 'left', mb: 1 }}
-                                    >
-                                        Actors: {film.actors}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        color="textSecondary"
-                                        sx={{ textAlign: 'left', mb: 1 }}
-                                    >
-                                        Year: {film.year}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        color="textSecondary"
-                                        sx={{ textAlign: 'left', mb: 1 }}
-                                    >
-                                        Runtime: {film.runtime}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        color="textSecondary"
-                                        sx={{ textAlign: 'left', mb: 1 }}>
-                                        IMDb: {film.imdb_rating}/10 ({formatVotes(film.imdb_votes)} votos)
-                                    </Typography>
-                                    {film.providers && film.providers.length > 0 && (
-                                        <Box>
-                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
-                                                Available on:
-                                            </Typography>
-                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.2 }}>
-                                                {film.providers.map(provider => (
-                                                    <img
-                                                        key={provider.id}
-                                                        src={provider.image_url}
-                                                        alt={provider.name}
-                                                        style={{ width: 48, height: 48, borderRadius: 10 }}
-                                                    />
+            {loading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                    <CircularProgress />
+                </Box>
+            ) : (
+                <Grid container spacing={0.5}>
+                    {filmsWatched.map((film) => (
+                        <Grid item xs={6} sm={4} md={3} key={film.id}>
+                            <Card>
+                                <CardActionArea onClick={() => handleExpandClick(film.id)}>
+                                    <Box sx={{ position: 'relative', paddingTop: '150%' }}>
+                                        <CardMedia
+                                            component="img"
+                                            image={film.image}
+                                            alt={`${film.tittle} Poster`}
+                                            sx={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                width: '100%',
+                                                height: '100%',
+                                                objectFit: 'cover'
+                                            }}
+                                        />
+                                    </Box>
+                                    <CardContent sx={{ padding: 0, paddingTop: 1 }}>
+                                        <Typography variant="subtitle1">
+                                            Rating: {film.average_rating.toFixed(2)}/10 ({film.vote_count})
+                                        </Typography>
+                                        <Rating
+                                            name="read-only"
+                                            value={film.average_rating / 2}
+                                            readOnly
+                                            precision={0.1}
+                                            max={5}
+                                        />
+                                    </CardContent>
+                                </CardActionArea>
+                                <Collapse in={expanded[film.id]} timeout="auto" unmountOnExit>
+                                    <CardContent>
+                                        <Typography variant="subtitle1">
+                                            Vista: {film.watched_date}
+                                        </Typography>
+                                        {film.ratings && (
+                                            <Box sx={{ mb: 1 }}>
+                                                {film.ratings.map((rating) => (
+                                                    <Typography
+                                                        key={rating.id}
+                                                        variant="body2"
+                                                        color="textSecondary"
+                                                        sx={{ textAlign: 'left' }}
+                                                    >
+                                                        {rating.user}: {rating.stars}/10
+                                                    </Typography>
                                                 ))}
                                             </Box>
-                                        </Box>
-                                    )}
-                                </CardContent>
-                            </Collapse>
-                            <CardActions sx={{ justifyContent: 'center', padding: 1 }}>
-                                <Button
-                                    fullWidth
-                                    variant="contained"
-                                    color={userRatedFilms.has(film.id) ? 'secondary' : 'primary'}
-                                    onClick={() => openRatingModal(film)}
-                                    disabled={userRatedFilms.has(film.id)}
-                                >
-                                    {userRatedFilms.has(film.id) ? 'Ya valorado' : 'Valorar'}
-                                </Button>
-                            </CardActions>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
+                                        )}
+                                        <Typography
+                                            variant="body2"
+                                            color="textSecondary"
+                                            sx={{ textAlign: 'justify', mb: 1 }}
+                                        >
+                                            {film.description}
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            color="textSecondary"
+                                            sx={{ textAlign: 'left', mb: 1 }}
+                                        >
+                                            Genre: {formatGenres(film.genres)}
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            color="textSecondary"
+                                            sx={{ textAlign: 'left', mb: 1 }}
+                                        >
+                                            Director: {film.director}
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            color="textSecondary"
+                                            sx={{ textAlign: 'left', mb: 1 }}
+                                        >
+                                            Actors: {film.actors}
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            color="textSecondary"
+                                            sx={{ textAlign: 'left', mb: 1 }}
+                                        >
+                                            Year: {film.year}
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            color="textSecondary"
+                                            sx={{ textAlign: 'left', mb: 1 }}
+                                        >
+                                            Runtime: {film.runtime}
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            color="textSecondary"
+                                            sx={{ textAlign: 'left', mb: 1 }}>
+                                            IMDb: {film.imdb_rating}/10 ({formatVotes(film.imdb_votes)} votos)
+                                        </Typography>
+                                        {film.providers && film.providers.length > 0 && (
+                                            <Box>
+                                                <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
+                                                    Available on:
+                                                </Typography>
+                                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.2 }}>
+                                                    {film.providers.map(provider => (
+                                                        <img
+                                                            key={provider.id}
+                                                            src={provider.image_url}
+                                                            alt={provider.name}
+                                                            style={{ width: 48, height: 48, borderRadius: 10 }}
+                                                        />
+                                                    ))}
+                                                </Box>
+                                            </Box>
+                                        )}
+                                    </CardContent>
+                                </Collapse>
+                                <CardActions sx={{ justifyContent: 'center', padding: 1 }}>
+                                    <Button
+                                        fullWidth
+                                        variant="contained"
+                                        color={userRatedFilms.has(film.id) ? 'secondary' : 'primary'}
+                                        onClick={() => openRatingModal(film)}
+                                        disabled={userRatedFilms.has(film.id)}
+                                    >
+                                        {userRatedFilms.has(film.id) ? 'Ya valorado' : 'Valorar'}
+                                    </Button>
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            )}
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={6000}
