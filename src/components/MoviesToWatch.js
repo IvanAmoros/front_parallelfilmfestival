@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '../utils/api';
+import SkeletonLoading from './SkeletonLoading'
 import {
 	Container,
 	Grid,
@@ -20,7 +21,7 @@ import {
 	Collapse,
 	Box,
 	Chip,
-	CircularProgress
+	Fade
 } from '@mui/material';
 import { useAuth } from '../AuthContext';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
@@ -253,184 +254,184 @@ const MoviesToWatch = () => {
 				))}
 			</Box>
 			{loading ? (
-				<Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-					<CircularProgress />
-				</Box>
+				<SkeletonLoading />
 			) : (
-				<Grid container spacing={0.5} padding={0}>
-					{moviesToWatch.map((movie) => (
-						<Grid item xs={6} sm={4} md={3} key={movie.id}>
-							<Card>
-								<CardActionArea onClick={() => handleExpandClick(movie.id)}>
-									<Box sx={{ position: 'relative', paddingTop: '150%' }}>
-										<CardMedia
-											component="img"
-											image={movie.image}
-											alt={`${movie.tittle} Poster`}
-											sx={{
-												position: 'absolute',
-												top: 0,
-												left: 0,
-												width: '100%',
-												height: '100%',
-												objectFit: 'cover'
-											}}
-										/>
-									</Box>
-									<CardContent sx={{ padding: 0, paddingTop: 1 }}>
-										<Typography variant="h6">{movie.tittle}</Typography>
-										<Typography variant="subtitle1">Up Votes: {movie.total_upvotes}</Typography>
-									</CardContent>
-								</CardActionArea>
-								<Collapse in={expanded[movie.id]} timeout="auto" unmountOnExit>
-									<CardContent>
-										<Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left' }}>
-											Votos:
-										</Typography>
-										{movie.upvotes && (
-											<Box sx={{ mb: 1 }}>
-												{movie.upvotes.map((upvote) => (
-													<Typography
-														key={upvote.id}
-														variant="body2"
-														color="textSecondary"
-														sx={{ textAlign: 'left' }}
-													>
-														{upvote.user}
-													</Typography>
-												))}
-											</Box>
-										)}
-										<Typography
-											variant="body2"
-											color="textSecondary"
-											sx={{ textAlign: 'justify', mb: 1 }}
-										>
-											{movie.description}
-										</Typography>
-										<Typography
-											variant="body2"
-											color="textSecondary"
-											sx={{ textAlign: 'left', mb: 1 }}
-										>
-											Genre: {formatGenres(movie.genres)}
-										</Typography>
-										<Typography
-											variant="body2"
-											color="textSecondary"
-											sx={{ textAlign: 'left', mb: 1 }}
-										>
-											Director: {movie.director}
-										</Typography>
-										<Typography
-											variant="body2"
-											color="textSecondary"
-											sx={{ textAlign: 'left', mb: 1 }}
-										>
-											Actors: {movie.actors}
-										</Typography>
-										<Typography
-											variant="body2"
-											color="textSecondary"
-											sx={{ textAlign: 'left', mb: 1 }}
-										>
-											Year: {movie.year}
-										</Typography>
-										<Typography
-											variant="body2"
-											color="textSecondary"
-											sx={{ textAlign: 'left', mb: 1 }}
-										>
-											Runtime: {movie.runtime}
-										</Typography>
-										<Typography
-											variant="body2"
-											color="textSecondary"
-											sx={{ textAlign: 'left', mb: 1 }}
-										>
-											IMDb: {movie.imdb_rating}/10 ({formatVotes(movie.imdb_votes)} votos)
-										</Typography>
-										{movie.providers && movie.providers.length > 0 && (
-											<Box>
-												<Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
-													Available on:
-												</Typography>
-												<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.2 }}>
-													{movie.providers.map(provider => (
-														<img
-															key={provider.id}
-															src={provider.image_url}
-															alt={provider.name}
-															style={{ width: 48, height: 48, borderRadius: 10 }}
-														/>
+				<Fade in={true} timeout={1000}>
+					<Grid container spacing={0.5} padding={0}>
+						{moviesToWatch.map((movie) => (
+							<Grid item xs={6} sm={4} md={3} key={movie.id}>
+								<Card>
+									<CardActionArea onClick={() => handleExpandClick(movie.id)}>
+										<Box sx={{ position: 'relative', paddingTop: '150%' }}>
+											<CardMedia
+												component="img"
+												image={movie.image}
+												alt={`${movie.tittle} Poster`}
+												sx={{
+													position: 'absolute',
+													top: 0,
+													left: 0,
+													width: '100%',
+													height: '100%',
+													objectFit: 'cover'
+												}}
+											/>
+										</Box>
+										<CardContent sx={{ padding: 0, paddingTop: 1 }}>
+											<Typography variant="h6">{movie.tittle}</Typography>
+											<Typography variant="subtitle1">Up Votes: {movie.total_upvotes}</Typography>
+										</CardContent>
+									</CardActionArea>
+									<Collapse in={expanded[movie.id]} timeout="auto" unmountOnExit>
+										<CardContent>
+											<Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left' }}>
+												Votos:
+											</Typography>
+											{movie.upvotes && (
+												<Box sx={{ mb: 1 }}>
+													{movie.upvotes.map((upvote) => (
+														<Typography
+															key={upvote.id}
+															variant="body2"
+															color="textSecondary"
+															sx={{ textAlign: 'left' }}
+														>
+															{upvote.user}
+														</Typography>
 													))}
 												</Box>
-											</Box>
-										)}
-									</CardContent>
-								</Collapse>
-								<CardActions>
-									<Grid container spacing={1}>
-										<Grid item xs={user && user.is_superuser ? 6 : 12}>
-											{movie.proposed_by === user?.username ? (
-												<Button
-													variant="contained"
-													color="error"
-													fullWidth
-													onClick={() => {
-														setSelectedFilmId(movie.id);
-														setOpenDeleteDialog(true);
-													}}
-												>
-													<DeleteForeverIcon />
-												</Button>
-											) : userUpvotedFilms.has(movie.id) ? (
-												<Button
-													variant="contained"
-													color="warning"
-													fullWidth
-													onClick={() => decreaseUpVotes(movie.id)}
-												>
-													<ThumbDownIcon />
-												</Button>
-											) : (
-												<Button
-													variant="contained"
-													color="success"
-													fullWidth
-													onClick={() => increaseUpVotes(movie.id)}
-												>
-													<ThumbUpIcon />
-												</Button>
+											)}
+											<Typography
+												variant="body2"
+												color="textSecondary"
+												sx={{ textAlign: 'justify', mb: 1 }}
+											>
+												{movie.description}
+											</Typography>
+											<Typography
+												variant="body2"
+												color="textSecondary"
+												sx={{ textAlign: 'left', mb: 1 }}
+											>
+												Genre: {formatGenres(movie.genres)}
+											</Typography>
+											<Typography
+												variant="body2"
+												color="textSecondary"
+												sx={{ textAlign: 'left', mb: 1 }}
+											>
+												Director: {movie.director}
+											</Typography>
+											<Typography
+												variant="body2"
+												color="textSecondary"
+												sx={{ textAlign: 'left', mb: 1 }}
+											>
+												Actors: {movie.actors}
+											</Typography>
+											<Typography
+												variant="body2"
+												color="textSecondary"
+												sx={{ textAlign: 'left', mb: 1 }}
+											>
+												Year: {movie.year}
+											</Typography>
+											<Typography
+												variant="body2"
+												color="textSecondary"
+												sx={{ textAlign: 'left', mb: 1 }}
+											>
+												Runtime: {movie.runtime}
+											</Typography>
+											<Typography
+												variant="body2"
+												color="textSecondary"
+												sx={{ textAlign: 'left', mb: 1 }}
+											>
+												IMDb: {movie.imdb_rating}/10 ({formatVotes(movie.imdb_votes)} votos)
+											</Typography>
+											{movie.providers && movie.providers.length > 0 && (
+												<Box>
+													<Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
+														Available on:
+													</Typography>
+													<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.2 }}>
+														{movie.providers.map(provider => (
+															<img
+																key={provider.id}
+																src={provider.image_url}
+																alt={provider.name}
+																style={{ width: 48, height: 48, borderRadius: 10 }}
+															/>
+														))}
+													</Box>
+												</Box>
+											)}
+										</CardContent>
+									</Collapse>
+									<CardActions>
+										<Grid container spacing={1}>
+											<Grid item xs={user && user.is_superuser ? 6 : 12}>
+												{movie.proposed_by === user?.username ? (
+													<Button
+														variant="contained"
+														color="error"
+														fullWidth
+														onClick={() => {
+															setSelectedFilmId(movie.id);
+															setOpenDeleteDialog(true);
+														}}
+													>
+														<DeleteForeverIcon />
+													</Button>
+												) : userUpvotedFilms.has(movie.id) ? (
+													<Button
+														variant="contained"
+														color="warning"
+														fullWidth
+														onClick={() => decreaseUpVotes(movie.id)}
+													>
+														<ThumbDownIcon />
+													</Button>
+												) : (
+													<Button
+														variant="contained"
+														color="success"
+														fullWidth
+														onClick={() => increaseUpVotes(movie.id)}
+													>
+														<ThumbUpIcon />
+													</Button>
+												)}
+											</Grid>
+											{user && user.is_superuser && (
+												<Grid item xs={6}>
+													<Button
+														variant="contained"
+														color="primary"
+														fullWidth
+														onClick={() => {
+															if (isLoggedIn && user && user.is_superuser) {
+																setSelectedFilmId(movie.id);
+																setOpenDialog(true);
+															} else {
+																setSnackbarMessage(isLoggedIn ? 'Debe ser superusuario para marcar como vista.' : 'Debe iniciar sesión primero.');
+																setSnackbarSeverity('warning');
+																setSnackbarOpen(true);
+															}
+														}}
+													>
+														<VisibilityIcon />
+													</Button>
+												</Grid>
 											)}
 										</Grid>
-										{user && user.is_superuser && (
-											<Grid item xs={6}>
-												<Button
-													variant="contained"
-													color="primary"
-													fullWidth
-													onClick={() => {
-														if (isLoggedIn && user && user.is_superuser) {
-															setSelectedFilmId(movie.id);
-															setOpenDialog(true);
-														} else {
-															setSnackbarMessage(isLoggedIn ? 'Debe ser superusuario para marcar como vista.' : 'Debe iniciar sesión primero.');
-															setSnackbarSeverity('warning');
-															setSnackbarOpen(true);
-														}
-													}}
-												>
-													<VisibilityIcon />
-												</Button>
-											</Grid>
-										)}
-									</Grid>
-								</CardActions>
-							</Card>
-						</Grid>
-					))}
-				</Grid>
+									</CardActions>
+								</Card>
+							</Grid>
+						))}
+					</Grid>
+				</Fade>
 			)}
 			<Snackbar
 				open={snackbarOpen}
