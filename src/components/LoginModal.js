@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../AuthContext';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Box, Alert } from '@mui/material';
+import { Typography, Dialog, DialogContent, DialogActions, TextField, Button, Box, Alert } from '@mui/material';
 
 const LoginModal = ({ open, onClose }) => {
   const { login, register } = useAuth();
@@ -57,9 +57,15 @@ const LoginModal = ({ open, onClose }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{isRegister ? 'Register' : 'Login'}</DialogTitle>
+    <Dialog open={open} onClose={onClose} maxWidth={'xs'}>
       <DialogContent>
+        <Typography
+          component="h1"
+          variant="h4"
+          sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', mb: 2 }}
+        >
+          {isRegister ? 'Register' : 'Sign in'}
+        </Typography>
         {error && <Alert severity="error">{error}</Alert>}
         <TextField
           label="Username"
@@ -68,6 +74,7 @@ const LoginModal = ({ open, onClose }) => {
           onKeyDown={handleKeyPress}
           fullWidth
           margin="dense"
+          required
         />
         {isRegister && (
           <TextField
@@ -78,6 +85,7 @@ const LoginModal = ({ open, onClose }) => {
             onKeyDown={handleKeyPress}
             fullWidth
             margin="dense"
+            required
           />
         )}
         <TextField
@@ -88,14 +96,21 @@ const LoginModal = ({ open, onClose }) => {
           onKeyDown={handleKeyPress}
           fullWidth
           margin="dense"
+          required
         />
+        <Button
+              type="button"
+              fullWidth
+              variant="contained"
+              onClick={isRegister ? handleRegister : handleLogin}
+              sx={{ mt: 2 }}
+            >
+              {isRegister ? 'Register' : 'Sign in'}
+            </Button>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
           Cancel
-        </Button>
-        <Button onClick={isRegister ? handleRegister : handleLogin} color="primary">
-          {isRegister ? 'Register' : 'Login'}
         </Button>
       </DialogActions>
       <Box textAlign="center" mb={2}>
