@@ -64,7 +64,7 @@ const FilmFestival = () => {
           component="h1"
           sx={{
             fontFamily: 'Lobster, cursive',
-            fontSize: shrinkHeader ? '24px' : '48px',
+            fontSize: shrinkHeader ? '24px' : '45px',
             textAlign: 'center',
             color: 'white',
             transition: 'font-size 0.3s ease',
