@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MovieSearch from './MovieSearch';
 import MoviesToWatch from './MoviesToWatch';
 import FilmsWatched from './FilmsWatched';
-import { Typography, Button, Container } from '@mui/material';
+import { Typography, Button, Container, Box } from '@mui/material';
 import { useAuth } from '../AuthContext';
 import LoginModal from './LoginModal';
 
 const FilmFestival = () => {
   const { isLoggedIn, logout } = useAuth();
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [shrinkHeader, setShrinkHeader] = useState(false);
 
   const handleOpenLoginModal = () => {
     setLoginModalOpen(true);
@@ -23,15 +24,58 @@ const FilmFestival = () => {
     window.location.reload();
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setShrinkHeader(true);
+      } else {
+        setShrinkHeader(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    window.scrollTo(0, 0);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
   return (
     <Container sx={{ px: 0 }}>
-      <Typography 
-        variant="h1" 
-        component="h1" 
-        sx={{ fontFamily: 'Lobster, cursive' }}
+      <Box
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1000,
+          backgroundColor: '#282c34',
+          transition: 'all 0.3s ease',
+          padding: shrinkHeader ? '8px 0' : '16px 0',
+          boxShadow: shrinkHeader ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none',
+        }}
       >
-        Paral·lel Film Festival
-      </Typography>
+        <Typography
+          variant="h1"
+          component="h1"
+          sx={{
+            fontFamily: 'Lobster, cursive',
+            fontSize: shrinkHeader ? '24px' : '48px',
+            textAlign: 'center',
+            color: 'white',
+            transition: 'font-size 0.3s ease',
+            cursor: 'pointer',
+          }}
+          onClick={handleRefresh}
+        >
+          Paral·lel Film Festival
+        </Typography>
+      </Box>
+
       <Button
         variant="contained"
         color="primary"
@@ -40,6 +84,7 @@ const FilmFestival = () => {
       >
         {isLoggedIn ? 'Logout' : 'Login'}
       </Button>
+
       <FilmsWatched />
       <MoviesToWatch />
       <MovieSearch />
