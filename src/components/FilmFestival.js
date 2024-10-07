@@ -26,7 +26,7 @@ const FilmFestival = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
+      if (window.scrollY > 10) {
         setShrinkHeader(true);
       } else {
         setShrinkHeader(false);
@@ -54,9 +54,9 @@ const FilmFestival = () => {
           top: 0,
           zIndex: 1000,
           backgroundColor: '#282c34',
-          transition: 'all 0.3s ease',
+          transition: 'all 0.5s ease',
           padding: shrinkHeader ? '8px 0' : '16px 0',
-          boxShadow: shrinkHeader ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none',
+          //boxShadow: shrinkHeader ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none',
         }}
       >
         <Typography
@@ -67,7 +67,7 @@ const FilmFestival = () => {
             fontSize: shrinkHeader ? '24px' : '45px',
             textAlign: 'center',
             color: 'white',
-            transition: 'font-size 0.3s ease',
+            transition: 'font-size 0.5s ease',
             cursor: 'pointer',
           }}
           onClick={handleRefresh}
@@ -78,9 +78,11 @@ const FilmFestival = () => {
 
       <Button
         variant="contained"
-        color="primary"
         onClick={isLoggedIn ? handleLogout : handleOpenLoginModal}
-        sx={{ mb: 2 }}
+        sx={{
+          mb: 2,
+          backgroundColor: '#5CB6FF'
+        }}
       >
         {isLoggedIn ? 'Logout' : 'Login'}
       </Button>
