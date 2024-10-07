@@ -50,7 +50,7 @@ const FilmFestival = () => {
           component="h1"
           sx={{
             fontFamily: 'Lobster, cursive',
-            fontSize: '45px',
+            fontSize: '40px',
             textAlign: 'center',
             color: 'white',
             cursor: 'pointer',
