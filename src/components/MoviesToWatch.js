@@ -376,18 +376,23 @@ const MoviesToWatch = () => {
 										<Grid container spacing={1} sx={{ justifyContent: 'center' }}>
 											<Grid item xs={user && user.is_superuser ? 6 : 10}>
 												{movie.proposed_by === user?.username ? (
-													<Button
-														sx={{ borderRadius: 4, backgroundColor: '#C14953' }}
-														variant="contained"
-														color="error"
-														fullWidth
-														onClick={() => {
-															setSelectedFilmId(movie.id);
-															setOpenDeleteDialog(true);
-														}}
-													>
-														<DeleteForeverIcon />
-													</Button>
+													<Badge
+														sx={{ display: 'flex', width: '100%' }}
+														badgeContent={movie.total_upvotes}
+														color="success">
+														<Button
+															sx={{ borderRadius: 4, backgroundColor: '#C14953' }}
+															variant="contained"
+															color="error"
+															fullWidth
+															onClick={() => {
+																setSelectedFilmId(movie.id);
+																setOpenDeleteDialog(true);
+															}}
+														>
+															<DeleteForeverIcon />
+														</Button>
+													</Badge>
 												) : userUpvotedFilms.has(movie.id) ? (
 													<Badge
 														sx={{ display: 'flex', width: '100%' }}
