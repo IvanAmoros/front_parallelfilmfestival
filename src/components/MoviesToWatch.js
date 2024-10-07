@@ -248,7 +248,10 @@ const MoviesToWatch = () => {
 							mr: 1,
 							mb: 1,
 							color: selectedGenres.includes(genre.name) ? 'white' : 'black',
-							backgroundColor: selectedGenres.includes(genre.name) ? 'rgb(25, 118, 210)' : 'lightgray',
+							backgroundColor: selectedGenres.includes(genre.name) ? '#00ADB5' : '#EEEEEE',
+							':hover': {
+								backgroundColor: '#393E46',
+							  },
 						}}
 					/>
 				))}
@@ -374,6 +377,7 @@ const MoviesToWatch = () => {
 											<Grid item xs={user && user.is_superuser ? 6 : 12}>
 												{movie.proposed_by === user?.username ? (
 													<Button
+														sx={{ borderRadius: 4, backgroundColor: '#C14953' }}
 														variant="contained"
 														color="error"
 														fullWidth
@@ -386,8 +390,8 @@ const MoviesToWatch = () => {
 													</Button>
 												) : userUpvotedFilms.has(movie.id) ? (
 													<Button
+														sx={{ backgroundColor: '#FFAD55', borderRadius: 4, ':hover': {backgroundColor: '#BF7221'} }}
 														variant="contained"
-														color="warning"
 														fullWidth
 														onClick={() => decreaseUpVotes(movie.id)}
 													>
@@ -395,8 +399,8 @@ const MoviesToWatch = () => {
 													</Button>
 												) : (
 													<Button
+														sx={{ backgroundColor: '#A8C256', borderRadius: 4, ':hover': {backgroundColor: '#566246'} }}
 														variant="contained"
-														color="success"
 														fullWidth
 														onClick={() => increaseUpVotes(movie.id)}
 													>
@@ -407,6 +411,7 @@ const MoviesToWatch = () => {
 											{user && user.is_superuser && (
 												<Grid item xs={6}>
 													<Button
+														sx={{ borderRadius: 4, backgroundColor: '#5CB6FF' }}
 														variant="contained"
 														color="primary"
 														fullWidth
