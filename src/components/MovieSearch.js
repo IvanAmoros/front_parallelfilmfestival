@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import api from '../utils/api';
+import SkeletonLoading from './SkeletonLoading'
 import {
     Button,
     Container,
@@ -34,24 +35,35 @@ const MovieSearch = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    const [loading, setLoading] = useState(false);
     const searchBoxRef = useRef(null);
+    const skeletonRef = useRef(null); // Add a ref for the skeleton
     const inputRef = useRef(null);
 
     const searchMovie = async () => {
-        const trimmedQuery = query.trim(); // Trim the query
+        const trimmedQuery = query.trim();
+
+        if (!trimmedQuery) return;
+
+        setLoading(true);
+
+        // Scroll to the skeleton when loading starts
+        if (skeletonRef.current) {
+            skeletonRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
 
         const options = {
             method: 'GET',
             url: 'https://www.omdbapi.com/',
             params: {
                 apikey: omdbApiKey,
-                s: trimmedQuery, // Use the trimmed query
+                s: trimmedQuery,
                 type: 'movie',
             }
         };
 
         try {
-            const response = await axios.request(options); // Use axios directly
+            const response = await axios.request(options);
             if (response.data.Response === 'True') {
                 const initialMovies = response.data.Search;
                 const detailedMoviesPromises = initialMovies.map(movie =>
@@ -73,9 +85,10 @@ const MovieSearch = () => {
             inputRef.current.blur();
         } catch (error) {
             console.error('Error:', error);
+        } finally {
+            setLoading(false);
         }
     };
-
 
     const getMovieDetails = async (imdbID) => {
         const options = {
@@ -219,105 +232,113 @@ const MovieSearch = () => {
                     }}
                 />
             </Box>
-            {movies.length > 0 && (
-                <Typography variant="h5" component="h2" mb={3}>
-                    Resultados de búsqueda
-                </Typography>
-            )}
-            <Grid container spacing={0.5} mb={2}>
-                {movies.map((movie) => (
-                    <Grid item xs={6} sm={4} md={3} key={movie.imdbID}>
-                        <Card>
-                            <CardActionArea onClick={() => handleExpandClick(movie.imdbID)}>
-                                <Box sx={{ position: 'relative', paddingTop: '150%' }}>
-                                    {movie.Poster !== 'N/A' && (
-                                        <CardMedia
-                                            component="img"
-                                            image={movie.Poster}
-                                            alt={`${movie.Title} Poster`}
-                                            sx={{
-                                                position: 'absolute',
-                                                top: 0,
-                                                left: 0,
-                                                width: '100%',
-                                                height: '100%',
-                                                objectFit: 'cover'
-                                            }}
-                                        />
-                                    )}
-                                </Box>
-                                <CardContent sx={{ padding: 0, paddingTop: 1 }}>
-                                    <Typography variant="h6">{movie.Title}</Typography>
-                                    <Typography variant="body2" color="textSecondary">
-                                        Año: {movie.Year}
-                                    </Typography>
-                                    {movie.details && movie.details.imdbRating && (
-                                        <Typography variant="body2" color="textSecondary">
-                                            {movie.details.imdbRating}/10 ({formatVotes(movie.details.imdbVotes)} votos)
-                                        </Typography>
-                                    )}
-                                </CardContent>
-                            </CardActionArea>
-                            {movie.details && (
-                                <Collapse in={expanded[movie.imdbID]} timeout="auto" unmountOnExit>
-                                    <CardContent>
-                                        <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'justify', mb: 1 }}>
-                                            {movie.details.Plot}
-                                        </Typography>
-                                        {movie.details.Genre && (
-                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
-                                                Genre: {movie.details.Genre}
+            {loading ? (
+                <div ref={skeletonRef}>
+                    <SkeletonLoading />
+                </div>
+            ) : (
+                <>
+                    {movies.length > 0 && (
+                        <Typography variant="h5" component="h2" mb={3}>
+                            Resultados de búsqueda
+                        </Typography>
+                    )}
+                    <Grid container spacing={0.5} mb={2}>
+                        {movies.map((movie) => (
+                            <Grid item xs={6} sm={4} md={3} key={movie.imdbID}>
+                                <Card>
+                                    <CardActionArea onClick={() => handleExpandClick(movie.imdbID)}>
+                                        <Box sx={{ position: 'relative', paddingTop: '150%' }}>
+                                            {movie.Poster !== 'N/A' && (
+                                                <CardMedia
+                                                    component="img"
+                                                    image={movie.Poster}
+                                                    alt={`${movie.Title} Poster`}
+                                                    sx={{
+                                                        position: 'absolute',
+                                                        top: 0,
+                                                        left: 0,
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        objectFit: 'cover'
+                                                    }}
+                                                />
+                                            )}
+                                        </Box>
+                                        <CardContent sx={{ padding: 0, paddingTop: 1 }}>
+                                            <Typography variant="h6">{movie.Title}</Typography>
+                                            <Typography variant="body2" color="textSecondary">
+                                                Año: {movie.Year}
                                             </Typography>
-                                        )}
-                                        {movie.details.Director && (
-                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
-                                                Director: {movie.details.Director}
-                                            </Typography>
-                                        )}
-                                        {movie.details.Actors && (
-                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
-                                                Actors: {movie.details.Actors}
-                                            </Typography>
-                                        )}
-                                        {movie.details.Runtime && (
-                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
-                                                Runtime: {movie.details.Runtime}
-                                            </Typography>
-                                        )}
-                                        {movie.details.providers && movie.details.providers.length > 0 && (
-                                            <Box>
-                                                <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
-                                                    Available on:
+                                            {movie.details && movie.details.imdbRating && (
+                                                <Typography variant="body2" color="textSecondary">
+                                                    {movie.details.imdbRating}/10 ({formatVotes(movie.details.imdbVotes)} votos)
                                                 </Typography>
-                                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.2 }}>
-                                                    {movie.details.providers.map(provider => (
-                                                        <img
-                                                            key={provider.provider_id}
-                                                            src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
-                                                            alt={provider.provider_name}
-                                                            style={{ width: 48, height: 48, borderRadius: 10 }}
-                                                        />
-                                                    ))}
-                                                </Box>
-                                            </Box>
-                                        )}
-                                    </CardContent>
-                                </Collapse>
-                            )}
-                            <CardActions>
-                                <Button
-                                    fullWidth
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => markAsProposal(movie)}
-                                >
-                                    PROPONER
-                                </Button>
-                            </CardActions>
-                        </Card>
+                                            )}
+                                        </CardContent>
+                                    </CardActionArea>
+                                    {movie.details && (
+                                        <Collapse in={expanded[movie.imdbID]} timeout="auto" unmountOnExit>
+                                            <CardContent>
+                                                <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'justify', mb: 1 }}>
+                                                    {movie.details.Plot}
+                                                </Typography>
+                                                {movie.details.Genre && (
+                                                    <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
+                                                        Genre: {movie.details.Genre}
+                                                    </Typography>
+                                                )}
+                                                {movie.details.Director && (
+                                                    <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
+                                                        Director: {movie.details.Director}
+                                                    </Typography>
+                                                )}
+                                                {movie.details.Actors && (
+                                                    <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
+                                                        Actors: {movie.details.Actors}
+                                                    </Typography>
+                                                )}
+                                                {movie.details.Runtime && (
+                                                    <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
+                                                        Runtime: {movie.details.Runtime}
+                                                    </Typography>
+                                                )}
+                                                {movie.details.providers && movie.details.providers.length > 0 && (
+                                                    <Box>
+                                                        <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
+                                                            Available on:
+                                                        </Typography>
+                                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.2 }}>
+                                                            {movie.details.providers.map(provider => (
+                                                                <img
+                                                                    key={provider.provider_id}
+                                                                    src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
+                                                                    alt={provider.provider_name}
+                                                                    style={{ width: 48, height: 48, borderRadius: 10 }}
+                                                                />
+                                                            ))}
+                                                        </Box>
+                                                    </Box>
+                                                )}
+                                            </CardContent>
+                                        </Collapse>
+                                    )}
+                                    <CardActions>
+                                        <Button
+                                            sx={{ backgroundColor: '#5CB6FF', borderRadius: 4 }}
+                                            fullWidth
+                                            variant="contained"
+                                            onClick={() => markAsProposal(movie)}
+                                        >
+                                            PROPONER
+                                        </Button>
+                                    </CardActions>
+                                </Card>
+                            </Grid>
+                        ))}
                     </Grid>
-                ))}
-            </Grid>
+                </>
+            )}
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={6000}

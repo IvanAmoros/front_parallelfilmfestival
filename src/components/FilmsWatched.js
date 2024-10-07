@@ -171,7 +171,7 @@ const FilmsWatched = () => {
                                                 }}
                                             />
                                         </Box>
-                                        <CardContent sx={{ padding: 0, paddingTop: 1 }}>
+                                        <CardContent sx={{ padding: 0, paddingTop: 1, backgroundColor: 'EEEEEE' }}>
                                             <Typography variant="subtitle1">
                                                 Rating: {film.average_rating.toFixed(2)}/10 ({film.vote_count})
                                             </Typography>
@@ -272,13 +272,13 @@ const FilmsWatched = () => {
                                     </Collapse>
                                     <CardActions sx={{ justifyContent: 'center', padding: 1 }}>
                                         <Button
+                                            sx={{ backgroundColor: userRatedFilms.has(film.id) ? 'secondary' : '#5CB6FF', borderRadius: 4 }}
                                             fullWidth
                                             variant="contained"
-                                            color={userRatedFilms.has(film.id) ? 'secondary' : 'primary'}
                                             onClick={() => openRatingModal(film)}
                                             disabled={userRatedFilms.has(film.id)}
                                         >
-                                            {userRatedFilms.has(film.id) ? 'Ya valorado' : 'Valorar'}
+                                            {userRatedFilms.has(film.id) ? 'Ya valorada' : 'Valorar'}
                                         </Button>
                                     </CardActions>
                                 </Card>
