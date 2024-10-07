@@ -21,7 +21,8 @@ import {
 	Collapse,
 	Box,
 	Chip,
-	Fade
+	Fade,
+	Badge
 } from '@mui/material';
 import { useAuth } from '../AuthContext';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
@@ -251,7 +252,7 @@ const MoviesToWatch = () => {
 							backgroundColor: selectedGenres.includes(genre.name) ? '#00ADB5' : '#EEEEEE',
 							':hover': {
 								backgroundColor: '#393E46',
-							  },
+							},
 						}}
 					/>
 				))}
@@ -282,7 +283,6 @@ const MoviesToWatch = () => {
 										</Box>
 										<CardContent sx={{ padding: 0, paddingTop: 1 }}>
 											<Typography variant="h6">{movie.tittle}</Typography>
-											<Typography variant="subtitle1">Up Votes: {movie.total_upvotes}</Typography>
 										</CardContent>
 									</CardActionArea>
 									<Collapse in={expanded[movie.id]} timeout="auto" unmountOnExit>
@@ -373,8 +373,8 @@ const MoviesToWatch = () => {
 										</CardContent>
 									</Collapse>
 									<CardActions>
-										<Grid container spacing={1}>
-											<Grid item xs={user && user.is_superuser ? 6 : 12}>
+										<Grid container spacing={1} sx={{ justifyContent: 'center' }}>
+											<Grid item xs={user && user.is_superuser ? 6 : 10}>
 												{movie.proposed_by === user?.username ? (
 													<Button
 														sx={{ borderRadius: 4, backgroundColor: '#C14953' }}
@@ -389,23 +389,33 @@ const MoviesToWatch = () => {
 														<DeleteForeverIcon />
 													</Button>
 												) : userUpvotedFilms.has(movie.id) ? (
-													<Button
-														sx={{ backgroundColor: '#FFAD55', borderRadius: 4, ':hover': {backgroundColor: '#BF7221'} }}
-														variant="contained"
-														fullWidth
-														onClick={() => decreaseUpVotes(movie.id)}
-													>
-														<ThumbDownIcon />
-													</Button>
+													<Badge
+														sx={{ display: 'flex', width: '100%' }}
+														badgeContent={movie.total_upvotes}
+														color="success">
+														<Button
+															sx={{ backgroundColor: '#FFAD55', borderRadius: 4, ':hover': { backgroundColor: '#BF7221' } }}
+															variant="contained"
+															fullWidth
+															onClick={() => decreaseUpVotes(movie.id)}
+														>
+															<ThumbDownIcon />
+														</Button>
+													</Badge>
 												) : (
-													<Button
-														sx={{ backgroundColor: '#A8C256', borderRadius: 4, ':hover': {backgroundColor: '#566246'} }}
-														variant="contained"
-														fullWidth
-														onClick={() => increaseUpVotes(movie.id)}
-													>
-														<ThumbUpIcon />
-													</Button>
+													<Badge
+														sx={{ display: 'flex', width: '100%' }}
+														badgeContent={movie.total_upvotes}
+														color="success">
+														<Button
+															sx={{ backgroundColor: '#A8C256', borderRadius: 4, ':hover': { backgroundColor: '#566246' } }}
+															variant="contained"
+															fullWidth
+															onClick={() => increaseUpVotes(movie.id)}
+														>
+															<ThumbUpIcon />
+														</Button>
+													</Badge>
 												)}
 											</Grid>
 											{user && user.is_superuser && (
@@ -437,7 +447,8 @@ const MoviesToWatch = () => {
 						))}
 					</Grid>
 				</Fade>
-			)}
+			)
+			}
 			<Snackbar
 				open={snackbarOpen}
 				autoHideDuration={6000}
@@ -490,7 +501,7 @@ const MoviesToWatch = () => {
 					</Button>
 				</DialogActions>
 			</Dialog>
-		</Container>
+		</Container >
 	);
 };
 
