@@ -21,8 +21,10 @@ import {
     DialogTitle,
     DialogContentText,
     Box,
-    Fade
+    Fade,
+    Chip
 } from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
 import { useAuth } from '../AuthContext';
 
 const api_url = process.env.REACT_APP_API_URL;
@@ -171,10 +173,24 @@ const FilmsWatched = () => {
                                                 }}
                                             />
                                         </Box>
-                                        <CardContent sx={{ padding: 0, paddingTop: 1, backgroundColor: 'EEEEEE' }}>
-                                            <Typography variant="subtitle1">
-                                                Rating: {film.average_rating.toFixed(2)}/10 ({film.vote_count})
-                                            </Typography>
+                                        <CardContent
+                                            sx={{
+                                                padding: 0,
+                                                paddingTop: 1,
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <Box sx={{ display: 'flex', alignItems: 'end' }}>
+                                                <Chip
+                                                    sx={{ borderRadius: 2, color: 'white', fontSize: 20, fontWeight: 'bold', maxWidth: 100, backgroundColor: '#4682B4' }}
+                                                    label={film.average_rating.toFixed(2)}
+                                                />
+                                                <Typography variant="subtitle1">
+                                                    <PersonIcon sx={{ fontSize: 'medium' }} /> {film.vote_count}
+                                                </Typography>
+                                            </Box>
                                             <Rating
                                                 name="read-only"
                                                 value={film.average_rating / 2}
