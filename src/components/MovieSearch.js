@@ -18,10 +18,12 @@ import {
     Collapse,
     Box,
     Snackbar,
-    Alert
+    Alert,
+    Chip
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAuth } from '../AuthContext';
+import PersonIcon from '@mui/icons-material/Person';
 
 const omdbApiKey = process.env.REACT_APP_OMDB_KEY;
 const tmdbApiKey = process.env.REACT_APP_TMDB_KEY;
@@ -267,14 +269,20 @@ const MovieSearch = () => {
                                         </Box>
                                         <CardContent sx={{ padding: 0, paddingTop: 1 }}>
                                             <Typography variant="h6">{movie.Title}</Typography>
+                                            {movie.details && movie.details.imdbRating && (
+                                                <Box sx={{ display: 'flex', alignItems: 'end', justifyContent: 'center' }}>
+                                                    <Chip
+                                                        sx={{ borderRadius: 2, color: 'white', fontSize: 20, fontWeight: 'bold', maxWidth: 100, backgroundColor: '#4682B4' }}
+                                                        label={movie.details.imdbRating}
+                                                    />
+                                                    <Typography variant="subtitle1">
+                                                        <PersonIcon sx={{ fontSize: 'medium' }} /> {formatVotes(movie.details.imdbVotes)}
+                                                    </Typography>
+                                                </Box>
+                                            )}
                                             <Typography variant="body2" color="textSecondary">
                                                 Año: {movie.Year}
                                             </Typography>
-                                            {movie.details && movie.details.imdbRating && (
-                                                <Typography variant="body2" color="textSecondary">
-                                                    {movie.details.imdbRating}/10 ({formatVotes(movie.details.imdbVotes)} votos)
-                                                </Typography>
-                                            )}
                                         </CardContent>
                                     </CardActionArea>
                                     {movie.details && (
