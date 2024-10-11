@@ -281,12 +281,10 @@ const MoviesToWatch = () => {
 												}}
 											/>
 										</Box>
-										<CardContent sx={{ padding: 0, paddingTop: 1 }}>
-											<Typography variant="h6">{movie.tittle}</Typography>
-										</CardContent>
 									</CardActionArea>
-									<Collapse in={expanded[movie.id]} timeout="auto" unmountOnExit>
+									<Collapse sx={{ backgroundColor: '#e7f0fe' }} in={expanded[movie.id]} timeout="auto" unmountOnExit>
 										<CardContent>
+											<Typography variant="h6">{movie.tittle}</Typography>
 											<Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left' }}>
 												Votos:
 											</Typography>
@@ -372,7 +370,7 @@ const MoviesToWatch = () => {
 											)}
 										</CardContent>
 									</Collapse>
-									<CardActions>
+									<CardActions sx={{ backgroundColor: '#e7f0fe' }}>
 										<Grid container spacing={1} sx={{ justifyContent: 'center' }}>
 											<Grid item xs={user && user.is_superuser ? 6 : 10}>
 												{movie.proposed_by === user?.username ? (
