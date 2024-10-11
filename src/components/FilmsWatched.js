@@ -157,7 +157,7 @@ const FilmsWatched = () => {
                         {filmsWatched.map((film) => (
                             <Grid item xs={6} sm={4} md={3} key={film.id}>
                                 <Card>
-                                    <CardActionArea onClick={() => handleExpandClick(film.id)}>
+                                    <CardActionArea sx={{ backgroundColor: '#e7f0fe' }}  onClick={() => handleExpandClick(film.id)}>
                                         <Box sx={{ position: 'relative', paddingTop: '150%' }}>
                                             <CardMedia
                                                 component="img"
@@ -200,7 +200,7 @@ const FilmsWatched = () => {
                                             />
                                         </CardContent>
                                     </CardActionArea>
-                                    <Collapse in={expanded[film.id]} timeout="auto" unmountOnExit>
+                                    <Collapse sx={{ backgroundColor: '#e7f0fe' }} in={expanded[film.id]} timeout="auto" unmountOnExit>
                                         <CardContent>
                                             <Typography variant="subtitle1">
                                                 Vista: {film.watched_date}
@@ -286,7 +286,7 @@ const FilmsWatched = () => {
                                             )}
                                         </CardContent>
                                     </Collapse>
-                                    <CardActions sx={{ justifyContent: 'center', padding: 1 }}>
+                                    <CardActions sx={{ justifyContent: 'center', padding: 1, backgroundColor: '#e7f0fe' }}>
                                         <Button
                                             sx={{ backgroundColor: userRatedFilms.has(film.id) ? 'secondary' : '#5CB6FF', borderRadius: 4 }}
                                             fullWidth

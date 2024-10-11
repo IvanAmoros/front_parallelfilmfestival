@@ -249,7 +249,7 @@ const MovieSearch = () => {
                         {movies.map((movie) => (
                             <Grid item xs={6} sm={4} md={3} key={movie.imdbID}>
                                 <Card>
-                                    <CardActionArea onClick={() => handleExpandClick(movie.imdbID)}>
+                                    <CardActionArea sx={{ backgroundColor: '#e7f0fe' }} onClick={() => handleExpandClick(movie.imdbID)}>
                                         <Box sx={{ position: 'relative', paddingTop: '150%' }}>
                                             {movie.Poster !== 'N/A' && (
                                                 <CardMedia
@@ -286,7 +286,7 @@ const MovieSearch = () => {
                                         </CardContent>
                                     </CardActionArea>
                                     {movie.details && (
-                                        <Collapse in={expanded[movie.imdbID]} timeout="auto" unmountOnExit>
+                                        <Collapse sx={{ backgroundColor: '#e7f0fe' }} in={expanded[movie.imdbID]} timeout="auto" unmountOnExit>
                                             <CardContent>
                                                 <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'justify', mb: 1 }}>
                                                     {movie.details.Plot}
@@ -331,7 +331,7 @@ const MovieSearch = () => {
                                             </CardContent>
                                         </Collapse>
                                     )}
-                                    <CardActions>
+                                    <CardActions sx={{ backgroundColor: '#e7f0fe' }}>
                                         <Button
                                             sx={{ backgroundColor: '#5CB6FF', borderRadius: 4 }}
                                             fullWidth
