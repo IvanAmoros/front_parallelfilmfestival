@@ -163,6 +163,7 @@ const FilmsWatched = () => {
                                                 component="img"
                                                 image={film.image}
                                                 alt={`${film.tittle} Poster`}
+                                                loading="lazy"
                                                 sx={{
                                                     position: 'absolute',
                                                     top: 0,
