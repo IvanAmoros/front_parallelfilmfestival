@@ -256,6 +256,7 @@ const MovieSearch = () => {
                                                     component="img"
                                                     image={movie.Poster}
                                                     alt={`${movie.Title} Poster`}
+                                                    loading="lazy"
                                                     sx={{
                                                         position: 'absolute',
                                                         top: 0,
