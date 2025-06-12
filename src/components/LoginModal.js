@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../AuthContext';
-import { Typography, Dialog, DialogContent, DialogActions, TextField, Button, Box, Alert } from '@mui/material';
+import { Typography, Dialog, DialogContent, DialogActions, TextField, Button, Box, Alert, Link } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
 const LoginModal = ({ open, onClose }) => {
   const { login, register } = useAuth();
@@ -117,6 +118,13 @@ const LoginModal = ({ open, onClose }) => {
         <Button onClick={toggleMode} color="secondary">
           {isRegister ? 'Ya tienes cuenta? Login' : "No tienes cuenta? Register"}
         </Button>
+        {!isRegister && (
+          <Box mt={1}>
+            <Link component={RouterLink} to="/forgot-password" underline="hover">
+              Forgot password?
+            </Link>
+          </Box>
+        )}
       </Box>
     </Dialog>
   );
