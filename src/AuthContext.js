@@ -93,7 +93,11 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Login error:', error);
-      return error.response?.data || 'Login error'; // Return error details
+      const errorMessage =
+        typeof error.response?.data === 'object'
+          ? error.response?.data?.detail || 'Login error'
+          : error.response?.data || 'Login error';
+      return errorMessage; // Return error details as a string
     }
   };
 
@@ -110,7 +114,11 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Registration error:', error);
-      return error.response?.data || 'Registration error'; // Return error details
+      const errorMessage =
+        typeof error.response?.data === 'object'
+          ? error.response?.data?.detail || 'Registration error'
+          : error.response?.data || 'Registration error';
+      return errorMessage; // Return error details as a string
     }
   };
 
