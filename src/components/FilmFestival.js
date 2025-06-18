@@ -45,20 +45,28 @@ const FilmFestival = () => {
           p: 1
         }}
       >
-        <Typography
-          variant="h1"
-          component="h1"
+      <Box
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1000,
+          backgroundColor: '#282c34',
+          transition: 'all 0.5s ease',
+          p: 1,
+          textAlign: 'center'
+        }}
+      >
+        <Box
+          component="img"
+          src="images/banner.png"
+          alt="Paral·lel Film Festival"
           sx={{
-            fontFamily: 'Lobster, cursive',
-            fontSize: '40px',
-            textAlign: 'center',
-            color: 'white',
+            maxHeight: '130px',
             cursor: 'pointer',
           }}
           onClick={handleRefresh}
-        >
-          Paral·lel Film Festival
-        </Typography>
+        />
+      </Box>
       </Box>
 
       <Button
