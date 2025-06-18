@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainPage from './MainPage';
 import CookieConsentComponent from './components/CookieConsentComponent';
 import FilmFestival from './components/FilmFestival';
-import ForgotPasswordPage from './ForgotPasswordPage';
-import PasswordResetConfirmPage from './PasswordResetConfirmPage';
+// import ForgotPasswordPage from './ForgotPasswordPage';
+// import PasswordResetConfirmPage from './PasswordResetConfirmPage';
 import { AuthProvider } from './AuthContext';
 
 function App() {
