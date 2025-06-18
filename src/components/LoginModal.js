@@ -118,13 +118,13 @@ const LoginModal = ({ open, onClose }) => {
         <Button onClick={toggleMode} color="secondary">
           {isRegister ? 'Ya tienes cuenta? Login' : "No tienes cuenta? Register"}
         </Button>
-        {!isRegister && (
+        {/* {!isRegister && (
           <Box mt={1}>
             <Link component={RouterLink} to="/forgot-password" underline="hover">
               Forgot password?
             </Link>
           </Box>
-        )}
+        )} */}
       </Box>
     </Dialog>
   );

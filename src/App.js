@@ -25,8 +25,8 @@ function App() {
                 </>
               } />
               <Route path="/" element={<FilmFestival />} />
-              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-              <Route path="/reset-confirm/:uid/:token" element={<PasswordResetConfirmPage />} />
+              {/* <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-confirm/:uid/:token" element={<PasswordResetConfirmPage />} /> */}
               {/* <Route path="/login" element={<LoginPage />} /> */}
             </Routes>
           </main>
