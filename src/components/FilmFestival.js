@@ -70,7 +70,6 @@ const FilmFestival = () => {
             onClick={handleRefresh}
           />
         </Box>
-
       </Box>
 
       <Button
