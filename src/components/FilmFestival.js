@@ -42,16 +42,6 @@ const FilmFestival = () => {
           zIndex: 1000,
           backgroundColor: '#282c34',
           transition: 'all 0.5s ease',
-          p: 1
-        }}
-      >
-      <Box
-        sx={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 1000,
-          backgroundColor: '#282c34',
-          transition: 'all 0.5s ease',
           p: 1,
           textAlign: 'center'
         }}
@@ -60,19 +50,17 @@ const FilmFestival = () => {
           component="img"
           src="images/banner.png"
           alt="Paral·lel Film Festival"
-          sx={{
-            maxHeight: '130px',
-
-
-
-            cursor: 'pointer',
-          }}
           onClick={handleRefresh}
+          sx={{
+            width: '100%',           
+            maxWidth: '100%',        
+            height: 'auto',          
+            maxHeight: { xs: '100px', sm: '130px' }, 
+            objectFit: 'contain',
+            cursor: 'pointer'
+          }}
         />
       </Box>
-
-      </Box>
-
       <Button
         variant="contained"
         onClick={isLoggedIn ? handleLogout : handleOpenLoginModal}
