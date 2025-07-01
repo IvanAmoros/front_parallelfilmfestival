@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MovieSearch from './MovieSearch';
 import MoviesToWatch from './MoviesToWatch';
 import FilmsWatched from './FilmsWatched';
-import { Typography, Button, Container, Box } from '@mui/material';
+import { Button, Container, Box } from '@mui/material';
 import { useAuth } from '../AuthContext';
 import LoginModal from './LoginModal';
 
@@ -61,8 +61,6 @@ const FilmFestival = () => {
           }}
         />
       </Box>
-
-
       <Button
         variant="contained"
         onClick={isLoggedIn ? handleLogout : handleOpenLoginModal}
