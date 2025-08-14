@@ -1,7 +1,7 @@
 import React from 'react';
 import { Skeleton, Grid, Box } from '@mui/material';
 
-const SideBySideRectangles = () => {
+const SkeletonLoading = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Grid container spacing={0.5}>
@@ -34,4 +34,4 @@ const SideBySideRectangles = () => {
   );
 };
 
-export default SideBySideRectangles;
+export default SkeletonLoading;
