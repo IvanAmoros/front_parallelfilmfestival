@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import MovieSearch from './MovieSearch';
-import MoviesToWatch from './MoviesToWatch';
+// import MovieSearch from './MovieSearch';
+// import MoviesToWatch from './MoviesToWatch';
 import FilmsWatched from './FilmsWatched';
 import { Button, Container, Box } from '@mui/material';
 import { useAuth } from '../AuthContext';
 import LoginModal from './LoginModal';
+import Events from './Events';
 
 const FilmFestival = () => {
   const { isLoggedIn, logout } = useAuth();
@@ -72,9 +73,10 @@ const FilmFestival = () => {
         {isLoggedIn ? 'Logout' : 'Login'}
       </Button>
 
+      <Events />
       <FilmsWatched />
-      <MoviesToWatch />
-      <MovieSearch />
+      {/* <MoviesToWatch /> */}
+      {/* <MovieSearch /> */}
       <LoginModal open={loginModalOpen} onClose={handleCloseLoginModal} />
     </Container>
   );
