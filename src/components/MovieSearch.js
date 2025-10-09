@@ -29,7 +29,7 @@ const omdbApiKey = process.env.REACT_APP_OMDB_KEY;
 const tmdbApiKey = process.env.REACT_APP_TMDB_KEY;
 const api_url = process.env.REACT_APP_API_URL;
 
-const MovieSearch = () => {
+const MovieSearch = ({ eventId, onClose }) => {
     const { isLoggedIn, accessToken } = useAuth();
     const [query, setQuery] = useState('');
     const [movies, setMovies] = useState([]);
@@ -39,7 +39,7 @@ const MovieSearch = () => {
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
     const [loading, setLoading] = useState(false);
     const searchBoxRef = useRef(null);
-    const skeletonRef = useRef(null); // Add a ref for the skeleton
+    const skeletonRef = useRef(null);
     const inputRef = useRef(null);
 
     const searchMovie = async () => {
@@ -49,7 +49,6 @@ const MovieSearch = () => {
 
         setLoading(true);
 
-        // Scroll to the skeleton when loading starts
         if (skeletonRef.current) {
             skeletonRef.current.scrollIntoView({ behavior: 'smooth' });
         }
@@ -105,7 +104,7 @@ const MovieSearch = () => {
         };
 
         try {
-            const response = await axios.request(options); // Use axios directly
+            const response = await axios.request(options);
             const movieDetails = response.data;
             const providers = await getStreamingProviders(imdbID);
             return { ...movieDetails, providers };
@@ -125,7 +124,7 @@ const MovieSearch = () => {
         };
 
         try {
-            const response = await axios.request(tmdbOptions); // Use axios directly
+            const response = await axios.request(tmdbOptions);
             return response.data.results?.ES?.flatrate || [];
         } catch (error) {
             return [];
@@ -154,20 +153,20 @@ const MovieSearch = () => {
         const postData = {
             tittle: movie.Title,
             image: movie.Poster,
-            description: movie.details ? movie.details.Plot : null,
-            year: movie.details ? movie.details.Year : null,
-            runtime: movie.details ? movie.details.Runtime : null,
-            genres: movie.details ? handleGenres(movie.details.Genre) : null,
-            director: movie.details ? movie.details.Director : null,
-            actors: movie.details ? movie.details.Actors : null,
-            imdb_rating: movie.details ? movie.details.imdbRating : null,
-            imdb_votes: movie.details ? movie.details.imdbVotes : null,
-            imdb_id: movie.details ? movie.details.imdbID : null,
-            providers: providers
+            description: movie.details?.Plot || null,
+            year: movie.details?.Year || null,
+            runtime: movie.details?.Runtime || null,
+            genres: movie.details?.Genre ? handleGenres(movie.details.Genre) : null,
+            director: movie.details?.Director || null,
+            actors: movie.details?.Actors || null,
+            imdb_rating: movie.details?.imdbRating || null,
+            imdb_votes: movie.details?.imdbVotes || null,
+            imdb_id: movie.details?.imdbID || null,
+            providers: providers,
         };
 
         try {
-            await api.post(`${api_url}/film-festival/films-to-watch/`, postData, {
+            await api.post(`${api_url}/film-festival/events/${eventId}/propose-film/`, postData, {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
                 }
@@ -175,7 +174,8 @@ const MovieSearch = () => {
             setSnackbarMessage('Propuesta enviada con éxito.');
             setSnackbarSeverity('success');
             setSnackbarOpen(true);
-            window.location.reload();
+
+            if (onClose) onClose();
         } catch (error) {
             console.error('Error posting data:', error);
             setSnackbarMessage('Error: La película ya ha sido propuesta.');
