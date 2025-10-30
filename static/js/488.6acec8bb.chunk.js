@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkfront_parallelfilmfestival=self.webpackChunkfront_parallelfilmfestival||[]).push([[488],{488:(e,l,a)=>{new WeakMap;new Set}}]);
+//# sourceMappingURL=488.6acec8bb.chunk.js.map
