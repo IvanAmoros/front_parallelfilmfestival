@@ -32,5 +32,5 @@ jobs:
         with:
           branch: gh-pages
           folder: build
-          token: ${{ secrets.GITHUBTOKEN }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       
