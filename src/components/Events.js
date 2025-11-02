@@ -322,7 +322,7 @@ const Events = () => {
                                             );
 
                                             return (
-                                                <Grid item xs={6} sm={4} md={3} key={proposal.id}>
+                                                <Grid size={{ xs: 4, sm: 4, md: 3 }} key={proposal.id}>
                                                     <Card sx={{ backgroundColor: "#f5f8ff" }}>
                                                         <CardActionArea>
                                                             <Box sx={{ position: "relative", paddingTop: "150%" }}>

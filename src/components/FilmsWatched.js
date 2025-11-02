@@ -155,7 +155,7 @@ const FilmsWatched = () => {
                 <Fade in={true} timeout={1000}>
                     <Grid container spacing={0.5}>
                         {filmsWatched.map((film) => (
-                            <Grid item xs={6} sm={4} md={3} key={film.id}>
+                            <Grid size={{ xs: 6, sm: 4, md: 3 }} key={film.id}>
                                 <Card>
                                     <CardActionArea sx={{ backgroundColor: '#e7f0fe' }}  onClick={() => handleExpandClick(film.id)}>
                                         <Box sx={{ position: 'relative', paddingTop: '150%' }}>
