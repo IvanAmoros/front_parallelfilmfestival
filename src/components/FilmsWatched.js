@@ -13,7 +13,6 @@ import {
     Snackbar,
     Alert,
     CardActionArea,
-    Collapse,
     Button,
     Dialog,
     DialogActions,
@@ -37,9 +36,10 @@ const FilmsWatched = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-    const [expanded, setExpanded] = useState({});
-    const [openModal, setOpenModal] = useState(false);
-    const [selectedFilm, setSelectedFilm] = useState(null);
+    const [detailModalOpen, setDetailModalOpen] = useState(false);
+    const [selectedFilmDetails, setSelectedFilmDetails] = useState(null);
+    const [ratingModalOpen, setRatingModalOpen] = useState(false);
+    const [selectedFilmForRating, setSelectedFilmForRating] = useState(null);
     const [rating, setRating] = useState(0);
 
     useEffect(() => {
@@ -98,7 +98,8 @@ const FilmsWatched = () => {
             setSnackbarMessage(`Has votado con un ${newValue}`);
             setSnackbarSeverity('success');
             setSnackbarOpen(true);
-            setOpenModal(false);
+            setRatingModalOpen(false);
+            setSelectedFilmForRating(null);
         } catch (error) {
             console.error('Error posting rating:', error);
             setSnackbarMessage('Error al enviar la valoración');
@@ -107,14 +108,20 @@ const FilmsWatched = () => {
         }
     };
 
-    const handleExpandClick = (filmId) => {
-        setExpanded(prevState => ({ ...prevState, [filmId]: !prevState[filmId] }));
+    const openFilmDetailModal = (film) => {
+        setSelectedFilmDetails(film);
+        setDetailModalOpen(true);
+    };
+
+    const closeFilmDetailModal = () => {
+        setDetailModalOpen(false);
+        setSelectedFilmDetails(null);
     };
 
     const openRatingModal = (film) => {
         if (isLoggedIn) {
-            setSelectedFilm(film);
-            setOpenModal(true);
+            setSelectedFilmForRating(film);
+            setRatingModalOpen(true);
         } else {
             setSnackbarMessage('Debe iniciar sesión primero para valorar una película');
             setSnackbarSeverity('warning');
@@ -122,9 +129,9 @@ const FilmsWatched = () => {
         }
     };
 
-    const closeModal = () => {
-        setOpenModal(false);
-        setSelectedFilm(null);
+    const closeRatingModal = () => {
+        setRatingModalOpen(false);
+        setSelectedFilmForRating(null);
         setRating(0);
     };
 
@@ -155,9 +162,9 @@ const FilmsWatched = () => {
                 <Fade in={true} timeout={1000}>
                     <Grid container spacing={0.5}>
                         {filmsWatched.map((film) => (
-                            <Grid size={{ xs: 6, sm: 4, md: 3 }} key={film.id}>
+                            <Grid size={{ xs: 4, sm: 4, md: 3 }} key={film.id}>
                                 <Card>
-                                    <CardActionArea sx={{ backgroundColor: '#e7f0fe' }}  onClick={() => handleExpandClick(film.id)}>
+                                    <CardActionArea sx={{ backgroundColor: '#e7f0fe' }} onClick={() => openFilmDetailModal(film)}>
                                         <Box sx={{ position: 'relative', paddingTop: '150%' }}>
                                             <CardMedia
                                                 component="img"
@@ -201,92 +208,6 @@ const FilmsWatched = () => {
                                             />
                                         </CardContent>
                                     </CardActionArea>
-                                    <Collapse sx={{ backgroundColor: '#e7f0fe' }} in={expanded[film.id]} timeout="auto" unmountOnExit>
-                                        <CardContent>
-                                            <Typography variant="subtitle1">
-                                                Vista: {film.watched_date}
-                                            </Typography>
-                                            {film.ratings && (
-                                                <Box sx={{ mb: 1 }}>
-                                                    {film.ratings.map((rating) => (
-                                                        <Typography
-                                                            key={rating.id}
-                                                            variant="body2"
-                                                            color="textSecondary"
-                                                            sx={{ textAlign: 'left' }}
-                                                        >
-                                                            {rating.user}: {rating.stars}/10
-                                                        </Typography>
-                                                    ))}
-                                                </Box>
-                                            )}
-                                            <Typography
-                                                variant="body2"
-                                                color="textSecondary"
-                                                sx={{ textAlign: 'justify', mb: 1 }}
-                                            >
-                                                {film.description}
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                color="textSecondary"
-                                                sx={{ textAlign: 'left', mb: 1 }}
-                                            >
-                                                Genre: {formatGenres(film.genres)}
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                color="textSecondary"
-                                                sx={{ textAlign: 'left', mb: 1 }}
-                                            >
-                                                Director: {film.director}
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                color="textSecondary"
-                                                sx={{ textAlign: 'left', mb: 1 }}
-                                            >
-                                                Actors: {film.actors}
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                color="textSecondary"
-                                                sx={{ textAlign: 'left', mb: 1 }}
-                                            >
-                                                Year: {film.year}
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                color="textSecondary"
-                                                sx={{ textAlign: 'left', mb: 1 }}
-                                            >
-                                                Runtime: {film.runtime}
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                color="textSecondary"
-                                                sx={{ textAlign: 'left', mb: 1 }}>
-                                                IMDb: {film.imdb_rating}/10 ({formatVotes(film.imdb_votes)} votos)
-                                            </Typography>
-                                            {film.providers && film.providers.length > 0 && (
-                                                <Box>
-                                                    <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
-                                                        Available on:
-                                                    </Typography>
-                                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.2 }}>
-                                                        {film.providers.map(provider => (
-                                                            <img
-                                                                key={provider.id}
-                                                                src={provider.image_url}
-                                                                alt={provider.name}
-                                                                style={{ width: 48, height: 48, borderRadius: 10 }}
-                                                            />
-                                                        ))}
-                                                    </Box>
-                                                </Box>
-                                            )}
-                                        </CardContent>
-                                    </Collapse>
                                     <CardActions sx={{ justifyContent: 'center', padding: 1, backgroundColor: '#e7f0fe' }}>
                                         <Button
                                             sx={{ backgroundColor: userRatedFilms.has(film.id) ? 'secondary' : '#5CB6FF', borderRadius: 4 }}
@@ -295,7 +216,7 @@ const FilmsWatched = () => {
                                             onClick={() => openRatingModal(film)}
                                             disabled={userRatedFilms.has(film.id)}
                                         >
-                                            {userRatedFilms.has(film.id) ? 'Ya valorada' : 'Valorar'}
+                                            {userRatedFilms.has(film.id) ? 'valorada' : 'Valorar'}
                                         </Button>
                                     </CardActions>
                                 </Card>
@@ -314,11 +235,132 @@ const FilmsWatched = () => {
                     {snackbarMessage}
                 </Alert>
             </Snackbar>
-            <Dialog open={openModal} onClose={closeModal}>
+            <Dialog
+                open={detailModalOpen}
+                onClose={closeFilmDetailModal}
+                maxWidth="md"
+                fullWidth
+            >
+                {selectedFilmDetails && (
+                    <>
+                        <DialogTitle>{selectedFilmDetails.tittle}</DialogTitle>
+                        <DialogContent dividers>
+                            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
+                                <Box sx={{ flexShrink: 0 }}>
+                                    <Box
+                                        component="img"
+                                        src={selectedFilmDetails.image}
+                                        alt={`${selectedFilmDetails.tittle} Poster`}
+                                        sx={{ width: { xs: '100%', sm: 240 }, borderRadius: 2, display: 'block' }}
+                                    />
+                                </Box>
+                                <Box sx={{ flexGrow: 1 }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                                        <Chip
+                                            sx={{ borderRadius: 2, color: 'white', fontSize: 20, fontWeight: 'bold', maxWidth: 100, backgroundColor: '#4682B4' }}
+                                            label={selectedFilmDetails.average_rating.toFixed(2)}
+                                        />
+                                        <Typography variant="subtitle1">
+                                            <PersonIcon sx={{ fontSize: 'medium' }} /> {selectedFilmDetails.vote_count}
+                                        </Typography>
+                                    </Box>
+                                    <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                                        Vista: {selectedFilmDetails.watched_date}
+                                    </Typography>
+                                    {selectedFilmDetails.ratings && selectedFilmDetails.ratings.length > 0 && (
+                                        <Box sx={{ mb: 1 }}>
+                                            {selectedFilmDetails.ratings.map((rating) => (
+                                                <Typography
+                                                    key={rating.id}
+                                                    variant="body2"
+                                                    color="textSecondary"
+                                                    sx={{ textAlign: 'left' }}
+                                                >
+                                                    {rating.user}: {rating.stars}/10
+                                                </Typography>
+                                            ))}
+                                        </Box>
+                                    )}
+                                    <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        sx={{ textAlign: 'justify', mb: 1 }}
+                                    >
+                                        {selectedFilmDetails.description}
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        sx={{ textAlign: 'left', mb: 1 }}
+                                    >
+                                        Genre: {formatGenres(selectedFilmDetails.genres)}
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        sx={{ textAlign: 'left', mb: 1 }}
+                                    >
+                                        Director: {selectedFilmDetails.director}
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        sx={{ textAlign: 'left', mb: 1 }}
+                                    >
+                                        Actors: {selectedFilmDetails.actors}
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        sx={{ textAlign: 'left', mb: 1 }}
+                                    >
+                                        Year: {selectedFilmDetails.year}
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        sx={{ textAlign: 'left', mb: 1 }}
+                                    >
+                                        Runtime: {selectedFilmDetails.runtime}
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        sx={{ textAlign: 'left', mb: 1 }}
+                                    >
+                                        IMDb: {selectedFilmDetails.imdb_rating}/10 ({formatVotes(selectedFilmDetails.imdb_votes)} votos)
+                                    </Typography>
+                                    {selectedFilmDetails.providers && selectedFilmDetails.providers.length > 0 && (
+                                        <Box>
+                                            <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'left', mb: 1 }}>
+                                                Available on:
+                                            </Typography>
+                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.2 }}>
+                                                {selectedFilmDetails.providers.map(provider => (
+                                                    <img
+                                                        key={provider.id}
+                                                        src={provider.image_url}
+                                                        alt={provider.name}
+                                                        style={{ width: 48, height: 48, borderRadius: 10 }}
+                                                    />
+                                                ))}
+                                            </Box>
+                                        </Box>
+                                    )}
+                                </Box>
+                            </Box>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={closeFilmDetailModal}>Cerrar</Button>
+                        </DialogActions>
+                    </>
+                )}
+            </Dialog>
+            <Dialog open={ratingModalOpen} onClose={closeRatingModal}>
                 <DialogTitle>Valorar película</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        {selectedFilm && selectedFilm.tittle}
+                        {selectedFilmForRating && selectedFilmForRating.tittle}
                     </DialogContentText>
                     <Rating
                         name="rating-controlled"
@@ -329,11 +371,11 @@ const FilmsWatched = () => {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={closeModal} color="primary">
+                    <Button onClick={closeRatingModal} color="primary">
                         Cancelar
                     </Button>
                     <Button
-                        onClick={() => handleRating(rating, selectedFilm.id)}
+                        onClick={() => selectedFilmForRating && handleRating(rating, selectedFilmForRating.id)}
                         color="primary"
                     >
                         Valorar
