@@ -422,8 +422,20 @@ const Events = () => {
                                                                 <Button
                                                                     variant={hasVoted ? "outlined" : "contained"}
                                                                     size="small"
-                                                                    color={hasVoted ? "secondary" : "primary"}
-                                                                    sx={{ mt: 1, borderRadius: 2 }}
+                                                                    color={hasVoted ? "secondary" : undefined}
+                                                                    sx={{
+                                                                        mt: 1,
+                                                                        borderRadius: 2,
+                                                                        ...(hasVoted
+                                                                            ? {}
+                                                                            : {
+                                                                                backgroundColor: "#5CB6FF",
+                                                                                color: "#fff",
+                                                                                "&:hover": {
+                                                                                    backgroundColor: "#4aa9f0",
+                                                                                },
+                                                                            }),
+                                                                    }}
                                                                     onClick={() => handleUpvote(proposal.id, hasVoted)}
                                                                 >
                                                                     {hasVoted ? "Quitar voto" : "Votar 👍"}
